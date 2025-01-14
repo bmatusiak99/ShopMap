@@ -1,0 +1,14 @@
+﻿@foreach (var item in ProductsList)
+{
+    <div class="col-md-3 mb-2">
+        <a href="/ProductDetails/@item.Id">
+            <div class="card">
+                <img class="img-thumbnail" src="@item.ProductImageURL" />
+                <div class="card-body">
+                    <h5 class="card-title mb-3"> @item.ProductName</h5>
+                    <p class="card-text"><b>@item.ProductPrice.ToString("C")</b></p>
+                </div>
+            </div>
+        </a>
+    </div>
+}
