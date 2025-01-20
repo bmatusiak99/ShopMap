@@ -320,6 +320,37 @@ namespace Shopify.Api.Data
                 CategoryName = "Shoes",
                 IconCSS = "fas fa-shoe-prints"
             });
+            //Adding shops
+            modelBuilder.Entity<Shop>().HasData(new Shop
+            {
+                Id = 1,
+                Name = "Tech-star",
+                Description = "Cutting-edge gadgets for gaming and electronics",
+                Address = "Żytnia 39",
+                City = "Siedlce",
+                PostalCode = "08-110",
+                PhoneNumber = "123456789"
+            });
+            modelBuilder.Entity<Shop>().HasData(new Shop
+            {
+                Id = 2,
+                Name = "Radiant Beauty",
+                Description = "Luxurious skincare and cosmetics",
+                Address = "3 Maja 54",
+                City = "Siedlce",
+                PostalCode = "08-110",
+                PhoneNumber = "987654321",
+            });
+            modelBuilder.Entity<Shop>().HasData(new Shop
+            {
+                Id = 3,
+                Name = "Home harmony",
+                Description = "Furnitures designed for modern living",
+                Address = "Józefa Piłsudskiego 74",
+                City = "Siedlce",
+                PostalCode = "08-110",
+                PhoneNumber = "123123123"
+            });
         }
 
         public DbSet<Cart> Carts { get; set; }
@@ -327,5 +358,6 @@ namespace Shopify.Api.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Shop> Shops { get; set; }
     }
 }

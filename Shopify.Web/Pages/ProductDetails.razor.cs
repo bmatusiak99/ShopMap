@@ -46,5 +46,9 @@ namespace Shopify.Web.Pages
                 ErrorMessage = ex.Message;
             }
         }
+        private void NavigateToMap(int shelfId)
+        {
+            NavigationManager.NavigateTo($"/shop-map?shelfId={shelfId}");
+        }
     }
 }

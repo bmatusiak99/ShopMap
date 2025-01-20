@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shopify.Api.Data;
 
@@ -11,9 +12,11 @@ using Shopify.Api.Data;
 namespace Shopify.Api.Migrations
 {
     [DbContext(typeof(ShopifyDbContext))]
-    partial class ShopifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250120210723_UpdateProductsTableWithShops")]
+    partial class UpdateProductsTableWithShops
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
