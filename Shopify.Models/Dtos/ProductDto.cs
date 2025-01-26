@@ -16,5 +16,7 @@ namespace Shopify.Models.Dtos
         public int ProductQuantity { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public int? ShopId { get; set; }
+        public int? ShelfNumber { get; set; }
     }
 }

@@ -31,7 +31,9 @@ namespace Shopify.Api.Extensions
                         ProductPrice = product.ProductPrice,
                         ProductQuantity = product.ProductQuantity,
                         CategoryId = product.CategoryId,
-                        CategoryName = productCategory.CategoryName
+                        CategoryName = productCategory.CategoryName,
+                        ShopId = product.ShopId,
+                        ShelfNumber = product.ShelfNumber
                     }).ToList();
         }
 
@@ -46,8 +48,9 @@ namespace Shopify.Api.Extensions
                 ProductPrice = product.ProductPrice,
                 ProductQuantity = product.ProductQuantity,
                 CategoryId = product.CategoryId,
-                CategoryName = productCategory.CategoryName
-
+                CategoryName = productCategory.CategoryName,
+                ShopId = product.ShopId,
+                ShelfNumber = product.ShelfNumber
             };
 
         }
