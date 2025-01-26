@@ -268,7 +268,11 @@ namespace Shopify.Api.Data
                 Mail = "bartek350z@gmail.com",
                 ImageURL = "/Images/Users/Sarah.png",
                 Password = "admin",
-                RoleId = 2
+                RoleId = 2,
+                Phone = "123456789", // Include new data
+                Address = "Mikłusy 123", // Include new data
+                City = "Trzebieszów", // Include new data
+                PostalCode = "21-404" // Include new data
             });
             modelBuilder.Entity<User>().HasData(new User
             {
@@ -278,7 +282,11 @@ namespace Shopify.Api.Data
                 Mail = "sarahcon@gmail.com",
                 ImageURL = "/Images/Users/Sarah.png",
                 Password = "worker",
-                RoleId = 1
+                RoleId = 1,
+                Phone = "123456789", // Include new data
+                Address = "Sokołowska 110", // Include new data
+                City = "Siedlce", // Include new data
+                PostalCode = "08-110" // Include new data
             });
 
             //Create Shopping Cart for Users
@@ -359,5 +367,7 @@ namespace Shopify.Api.Data
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Shop> Shops { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderPosition> OrderPositions { get; set; }
     }
 }

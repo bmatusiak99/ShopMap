@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shopify.Api.Data;
 
@@ -11,9 +12,11 @@ using Shopify.Api.Data;
 namespace Shopify.Api.Migrations
 {
     [DbContext(typeof(ShopifyDbContext))]
-    partial class ShopifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250126220901_AddOrdersTable")]
+    partial class AddOrdersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -525,14 +528,6 @@ namespace Shopify.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -553,14 +548,6 @@ namespace Shopify.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -572,29 +559,21 @@ namespace Shopify.Api.Migrations
                         new
                         {
                             Id = new Guid("79e9147f-44e3-4026-8bb6-061ef1cefe4c"),
-                            Address = "Mikłusy 123",
-                            City = "Trzebieszów",
                             FirstName = "Bartosz",
                             ImageURL = "/Images/Users/Sarah.png",
                             LastName = "Matusiak",
                             Mail = "bartek350z@gmail.com",
                             Password = "admin",
-                            Phone = "123456789",
-                            PostalCode = "21-404",
                             RoleId = 2
                         },
                         new
                         {
                             Id = new Guid("3345739f-81df-4e39-8848-85a491fe75e2"),
-                            Address = "Sokołowska 110",
-                            City = "Siedlce",
                             FirstName = "Sarah",
                             ImageURL = "/Images/Users/Sarah.png",
                             LastName = "Connor",
                             Mail = "sarahcon@gmail.com",
                             Password = "worker",
-                            Phone = "123456789",
-                            PostalCode = "08-110",
                             RoleId = 1
                         });
                 });

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Shopify.Models.Dtos;
+using Shopify.Web.Services;
 using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Pages
@@ -13,6 +14,7 @@ namespace Shopify.Web.Pages
         protected string PaymentDescription { get; set; }
         protected decimal PaymentAmount { get; set; }
         [Inject]public IShoppingCartService ShoppingCartService { get; set; }
+        [Inject]public IOrderService OrderService { get; set; }
 
         //[Inject]public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
 
@@ -60,6 +62,26 @@ namespace Shopify.Web.Pages
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+
+        protected async Task CreateOrder_Click()
+        {
+            try
+            {
+                // Call the service to create the order
+                var createdOrder = await OrderService.CreateOrderAsync(ShoppingCartItems, Guid.Parse("79e9147f-44e3-4026-8bb6-061ef1cefe4c"), 1);
+
+                // Navigate to a confirmation or order details page
+                //NavigationManager.NavigateTo($"/OrderDetails/{createdOrder.Id}");
+
+                // Optionally, display a success message or clear the current order data
+                // SuccessMessage = "Order created successfully!";
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }

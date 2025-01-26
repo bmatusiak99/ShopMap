@@ -8,7 +8,6 @@ namespace Shopify.Web.Services.Contracts
         Task<CartItemDto> AddItem(CartItemToAddDto cartItemToAddDto);
         Task<CartItemDto> DeleteItem(int id);
         Task<CartItemDto> UpdateQty(CartItemQuantityUpdateDto cartItemQtyUpdateDto);
-
         event Action<int> OnShoppingCartChanged;
         void RaiseEventOnShoppingCartChanged(int totalQty);
     }
