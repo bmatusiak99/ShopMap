@@ -24,15 +24,12 @@ else
                 </b>
             </p>
             <div>
-                <button class="btn btn-success"
-                        @onclick="() => (AddToCart_Click(new CartItemToAddDto{
+                <MudButton @onclick="() => (AddToCart_Click(new CartItemToAddDto{
                         CartId = HardCoded.CartId,
                         ProductId = Product.Id,
                         ProductQuantity = 1
-                        }))">
-                    <b>Add to Cart</b>
-                </button>
-                <button @onclick="() => NavigateToMap(Product.ShelfNumber.Value)">Locate on Map</button>
+                        }))" Variant=" Variant.Filled" Color="Color.Primary">Add to cart</MudButton>
+                <MudButton @onclick="NavigateToMap" Variant="Variant.Filled" Color="Color.Secondary">Show on shelves</MudButton>
             </div>
             
         </div>

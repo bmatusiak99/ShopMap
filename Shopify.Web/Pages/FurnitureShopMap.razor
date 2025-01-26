@@ -1,134 +1,43 @@
-﻿@page "/shop-map"
-@inject NavigationManager NavigationManager
+﻿<MudDialog>
+    <DialogContent>
+        <MudDialogTitle>Shop Layout</MudDialogTitle>
+        <MudDialogContent>
+            <div style="border: 1px solid black; width: 800px; height: 600px;">
+                <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                    <!-- Background -->
+                    <rect x="0" y="0" width="800" height="600" fill="#f3f4f6" />
 
-<h3>Shop Layout</h3>
+                    <!-- Walls -->
+                    <line x1="50" y1="50" x2="750" y2="50" stroke="black" stroke-width="3" />
+                    <line x1="50" y1="50" x2="50" y2="550" stroke="black" stroke-width="3" />
+                    <line x1="750" y1="50" x2="750" y2="550" stroke="black" stroke-width="3" />
+                    <line x1="50" y1="550" x2="750" y2="550" stroke="black" stroke-width="3" />
 
-<div style="border: 1px solid black; width: 800px; height: 600px;">
-    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
-        <!-- Background -->
-        <rect x="0" y="0" width="800" height="600" fill="#f3f4f6" />
+                    <!-- Entrance -->
+                    <line x1="540" y1="550" x2="540" y2="530" stroke="black" stroke-width="3" />
+                    <line x1="540" y1="530" x2="610" y2="530" stroke="black" stroke-width="3" />
+                    <line x1="610" y1="530" x2="610" y2="550" stroke="black" stroke-width="3" />
+                    <text x="575" y="520" font-family="Arial" font-size="16" text-anchor="middle" fill="black">Entrance</text>
 
-        <!-- Walls -->
-        <line x1="50" y1="50" x2="750" y2="50" stroke="black" stroke-width="3" />
-        <line x1="50" y1="50" x2="50" y2="550" stroke="black" stroke-width="3" />
-        <line x1="750" y1="50" x2="750" y2="550" stroke="black" stroke-width="3" />
-        <line x1="50" y1="550" x2="750" y2="550" stroke="black" stroke-width="3" />
+                    <!-- Changing room -->
+                    <line x1="750" y1="105" x2="730" y2="105" stroke="black" stroke-width="3" />
+                    <line x1="730" y1="105" x2="730" y2="175" stroke="black" stroke-width="3" />
+                    <line x1="730" y1="175" x2="750" y2="175" stroke="black" stroke-width="3" />
+                    <text x="710" y="140" fill="black" font-size="16" font-family="Arial" text-anchor="end">Changing Room</text>
 
-        <!-- Entrance -->
+                    <!-- Cash register -->
+                    <rect x="60" y="60" width="60" height="120" fill="#522f0e" />
+                    <text x="90" y="120" fill="white" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Cash</text>
 
-        <line x1="540" y1="550" x2="540" y2="530" stroke="black" stroke-width="3" />
-        <line x1="540" y1="530" x2="610" y2="530" stroke="black" stroke-width="3" />
-        <line x1="610" y1="530" x2="610" y2="550" stroke="black" stroke-width="3" />
-        <text x="575" y="520" font-family="Arial" font-size="16" text-anchor="middle" fill="black">Entrance</text>
-
-
-        <!-- Changing room --> 
-
-        <line x1="750" y1="105" x2="730" y2="105" stroke="black" stroke-width="3" />
-        <line x1="730" y1="105" x2="730" y2="175" stroke="black" stroke-width="3" />
-        <line x1="730" y1="175" x2="750" y2="175" stroke="black" stroke-width="3" />
-        <text x="710" y="140" fill="black" font-size="16" font-family="Arial" text-anchor="end">Changing Room</text>
-
-        <!-- Cash register -->
-
-        <rect x="60" y="60" width="60" height="120" fill="#522f0e" />
-        <text x="90" y="120" fill="white" font-size="16" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Cash</text>
-
-        <!-- Shelves -->
-        @foreach (var shelf in Shelves)
-        {
-            <rect x="@shelf.X" y="@shelf.Y" width="@shelf.Width" height="@shelf.Height" fill="@(SelectedShelfId == shelf.Id ? "red" : "#e6a502")" />
-        }
-
-    </svg>
-</div>
-
-@if (SelectedShelfId != null)
-{
-    <p>You are viewing Shelf: @SelectedShelfId</p>
-}
-
-@code {
-    private List<Shelf> Shelves = new()
-    {
-        //Left wall shelfs
-        new Shelf { Id = 1, X = 60, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 2, X = 60, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 3, X = 60, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 4, X = 60, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 5, X = 60, Y = 477, Width = 30, Height = 68 },
-
-        //Middle shelfs
-        new Shelf { Id = 6, X = 205, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 7, X = 205, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 8, X = 205, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 9, X = 205, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 10, X = 205, Y = 477, Width = 30, Height = 68 },
-
-        new Shelf { Id = 11, X = 240, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 12, X = 240, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 13, X = 240, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 14, X = 240, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 15, X = 240, Y = 477, Width = 30, Height = 68 },
-
-        new Shelf { Id = 16, X = 385, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 17, X = 385, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 18, X = 385, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 19, X = 385, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 20, X = 385, Y = 477, Width = 30, Height = 68 },
-
-
-        new Shelf { Id = 21, X = 420, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 22, X = 420, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 23, X = 420, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 24, X = 420, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 25, X = 420, Y = 477, Width = 30, Height = 68 },
-
-        //Top wall shelfs
-        new Shelf { Id = 26, X = 130, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 27, X = 205, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 28, X = 280, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 29, X = 355, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 30, X = 430, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 31, X = 505, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 32, X = 580, Y = 60, Width = 70, Height = 30 },
-        new Shelf { Id = 33, X = 655, Y = 60, Width = 70, Height = 30 },
-
-        //Right wall shelfs
-        new Shelf { Id = 34, X = 710, Y = 185, Width = 30, Height = 68 },
-        new Shelf { Id = 35, X = 710, Y = 258, Width = 30, Height = 68 },
-        new Shelf { Id = 36, X = 710, Y = 331, Width = 30, Height = 68 },
-        new Shelf { Id = 37, X = 710, Y = 404, Width = 30, Height = 68 },
-        new Shelf { Id = 38, X = 710, Y = 477, Width = 30, Height = 68 },
-    };
-
-    private int? SelectedShelfId;
-
-    protected override void OnInitialized()
-    {
-        // Parse the query string to get the shelf ID
-        var uri = new Uri(NavigationManager.Uri);
-        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-
-        if (query.TryGetValue("shelfId", out var shelfIdStr) && int.TryParse(shelfIdStr, out var shelfId))
-        {
-            SelectedShelfId = shelfId;
-        }
-    }
-
-    private void OnShelfClick(int shelfId)
-    {
-        SelectedShelfId = shelfId;
-    }
-}
-
-@code {
-    public class Shelf
-    {
-        public int Id { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-    }
-}
+                    <!-- Shelves -->
+                    @foreach (var shelf in Shelves)
+                    {
+                        <rect x="@shelf.X" y="@shelf.Y" width="@shelf.Width" height="@shelf.Height"
+                              fill="@(SelectedShelfId == shelf.Id ? "red" : "#e6a502")"
+                              @onclick="() => OnShelfClick(shelf.Id)" />
+                    }
+                </svg>
+            </div>
+        </MudDialogContent>
+    </DialogContent>
+</MudDialog>

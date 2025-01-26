@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Shopify.Models.Dtos;
-using Shopify.Web.Services;
+
 using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Pages
@@ -11,9 +12,11 @@ namespace Shopify.Web.Pages
         [Inject] public IProductService ProductService { get; set; }
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IDialogService _dialogService { get; set; }
         public ProductDto Product { get; set; }
         public string ErrorMessage { get; set; }
         private List<CartItemDto> ShoppingCartItems { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             try
@@ -46,9 +49,16 @@ namespace Shopify.Web.Pages
                 ErrorMessage = ex.Message;
             }
         }
-        private void NavigateToMap(int shelfId)
+        private Task NavigateToMap()
         {
-            NavigationManager.NavigateTo($"/shop-map?shelfId={shelfId}");
+            var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Large };
+
+            var parameters = new DialogParameters
+            {
+                { "SelectedShelfId", Product.ShelfNumber.Value }
+            };
+
+            return _dialogService.ShowAsync<FurnitureShopMap>("Dialog Title", parameters, options);
         }
     }
 }
