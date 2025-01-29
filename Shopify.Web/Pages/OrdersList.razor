@@ -1,0 +1,20 @@
+﻿@page "/OrdersList"
+
+<MudTable Items="orders" Dense="true" Hover="true" Bordered="true" Striped="true">
+    <HeaderContent>
+        <MudTh>User Name</MudTh>
+        <MudTh>Date</MudTh>
+        <MudTh>Shop Name</MudTh>
+        <MudTh>Total Price</MudTh>
+        <MudTh>Show Order</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="order">
+        <MudTd>@order.UserName</MudTd>
+        <MudTd>@order.OrderDate.ToString("yyyy-MM-dd")</MudTd>
+        <MudTd>@order.ShopName</MudTd>
+        <MudTd>@order.TotalPrice.ToString("C")</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.DocumentScanner" aria-label="delete" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>

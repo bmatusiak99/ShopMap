@@ -14,5 +14,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddMudServices();
+builder.Services.AddDevExpressBlazor();
+builder.Services.AddDevExpressServerSideBlazorReportViewer();
 
 await builder.Build().RunAsync();

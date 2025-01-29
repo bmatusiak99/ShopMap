@@ -1,4 +1,5 @@
-﻿@inject IShoppingCartService shoppingCartService
+﻿@using MudBlazor;
+@inject IShoppingCartService shoppingCartService
 @implements IDisposable
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -18,7 +19,15 @@
             </NavLink>
         </div>
 
-        <ProductCategoriesNavMenu/>
+        <ProductCategoriesNavMenu />
+
+        <MudButton OnClick="NavigateToOrders">View Orders</MudButton>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="viewer">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Report Viewer
+            </NavLink>
+        </div>
 
         <div class="nav-item px-3 d-sm-none">
             <NavLink class="nav-link" href="ShoppingCart">
@@ -27,30 +36,3 @@
         </div>
     </nav>
 </div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private int shoppingCartItemsCount = 0;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    protected override void OnInitialized()
-    {
-        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
-    }
-    private void ShoppingCartChanged(int totalQty)
-    {
-        shoppingCartItemsCount = totalQty;
-        StateHasChanged();
-    }
-    void IDisposable.Dispose()
-    {
-        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
-    }
-}

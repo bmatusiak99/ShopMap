@@ -9,11 +9,11 @@ namespace Shopify.Api.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderRepository orderRepository;
 
         public OrderController(IOrderRepository orderRepository)
         {
-            _orderRepository = orderRepository;
+            this.orderRepository = orderRepository;
         }
 
         [HttpPost("create")]
@@ -39,7 +39,7 @@ namespace Shopify.Api.Controllers
                 };
 
                 // Add order using repository
-                int orderId = await _orderRepository.CreateOrderAsync(order);
+                int orderId = await orderRepository.CreateOrderAsync(order);
 
                 return Ok(orderId); // Return created order ID
             }
@@ -48,6 +48,34 @@ namespace Shopify.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderViewDto>>> GetOrders()
+        {
+            try
+            {
+                var orders = await this.orderRepository.GetOrders();
+
+                if (orders == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(orders);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
+        }
+
+
+
+
     }
 
 }

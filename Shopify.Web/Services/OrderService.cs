@@ -12,11 +12,11 @@ namespace Shopify.Web.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient httpClient;
 
         public OrderService(HttpClient httpClient)
         {
-            _httpClient = httpClient;
+            this.httpClient = httpClient;
         }
 
         public async Task<int> CreateOrderAsync(IEnumerable<CartItemDto> shoppingCartItems, Guid userId, int shopId)
@@ -38,7 +38,7 @@ namespace Shopify.Web.Services
                     }).ToList()
                 };
 
-                var response = await _httpClient.PostAsJsonAsync("api/Order/create", orderDto);
+                var response = await httpClient.PostAsJsonAsync("api/Order/create", orderDto);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -61,6 +61,34 @@ namespace Shopify.Web.Services
                 throw new Exception("An error occurred while creating the order", ex);
             }
         }
-    }
+        public async Task<IEnumerable<OrderViewDto>> GetOrders()
+        {
+            try
+            {
+                var response = await httpClient.GetAsync($"api/Order");
 
+                if (response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    {
+                        return Enumerable.Empty<OrderViewDto>();
+                    }
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<OrderViewDto>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+    }
 }

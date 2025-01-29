@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="24.2.3" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="24.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.12" />
     <PackageReference Include="MudBlazor" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
