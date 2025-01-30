@@ -14,7 +14,7 @@
         <MudTd>@order.ShopName</MudTd>
         <MudTd>@order.TotalPrice.ToString("C")</MudTd>
         <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.DocumentScanner" aria-label="delete" />
+            <MudIconButton Icon="@Icons.Material.Filled.DocumentScanner" OnClick="() => ShowReport(order.Id)" />
         </MudTd>
     </RowTemplate>
 </MudTable>

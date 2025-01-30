@@ -13,6 +13,7 @@ namespace Shopify.Web.Pages
     {
         protected IEnumerable<OrderViewDto> orders { get; set; }
         [Inject] public IOrderService OrderService { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
             try
@@ -28,12 +29,9 @@ namespace Shopify.Web.Pages
             }
         }
 
-        public void Print(int OrderId)
+        private void ShowReport(int orderId)
         {
-            var orderReportViewModel = new OrderReportViewModel();
-            XtraReport report = new OrderReport(orderReportViewModel);
-
-
+            NavigationManager.NavigateTo($"/viewer/{orderId}");
         }
 
 

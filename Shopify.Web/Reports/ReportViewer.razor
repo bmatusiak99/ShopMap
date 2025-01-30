@@ -1,15 +1,14 @@
-﻿@page "/Viewer"
+﻿@page "/viewer/{orderId:int}"
 
 @using DevExpress.Blazor.Reporting
+@using DevExpress.XtraReports.UI;
 
 <link href="_content/DevExpress.Blazor.Themes/blazing-berry.bs5.css" rel="stylesheet" />
 <link rel="stylesheet" href="_content/DevExpress.Blazor.Reporting.Viewer/css/dx-blazor-reporting-components.bs5.css">
 
 <h3>Report Viewer</h3>
 
-<DxReportViewer @ref="reportViewer">
+<DxReportViewer @ref="reportViewer" Report="@Report">
 </DxReportViewer>
 
-@code {
-    DxReportViewer? reportViewer;
-}
+<MudButton OnClick="GoBack" Color="Color.Primary">Back</MudButton>
