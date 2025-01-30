@@ -2,9 +2,9 @@
 using MudBlazor;
 using System;
 
-namespace Shopify.Web.Pages
+namespace Shopify.Web.Pages.ShopMaps
 {
-    public partial class FurnitureShopMap
+    public partial class ShoesShopMap
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
         [Parameter] public int? SelectedShelfId { get; set; }

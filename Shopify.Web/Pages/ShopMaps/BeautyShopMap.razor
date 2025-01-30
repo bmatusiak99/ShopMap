@@ -1,0 +1,41 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudDialogContent>
+            <div style="border: 1px solid black; width: 800px; height: 600px;">
+                <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+
+                    <!-- Background -->
+                    <rect x="0" y="0" width="800" height="600" fill="#f3f4f6" />
+
+                    <!-- Walls -->
+                    <line x1="50" y1="50" x2="750" y2="50" stroke="black" stroke-width="3" />
+                    <line x1="50" y1="50" x2="50" y2="550" stroke="black" stroke-width="3" />
+                    <line x1="750" y1="50" x2="750" y2="550" stroke="black" stroke-width="3" />
+                    <line x1="50" y1="550" x2="750" y2="550" stroke="black" stroke-width="3" />
+
+                    <!-- Entrance -->
+                    <line x1="375" y1="550" x2="375" y2="530" stroke="black" stroke-width="3" />
+                    <line x1="375" y1="530" x2="425" y2="530" stroke="black" stroke-width="3" />
+                    <line x1="425" y1="530" x2="425" y2="550" stroke="black" stroke-width="3" />
+                    <text x="400" y="520" font-family="Arial" font-size="16" text-anchor="middle" fill="black">Entrance</text>
+
+                    <!-- Cash register -->
+                    <rect x="100" y="60" width="80" height="40" fill="#522f0e" />
+                    <text x="140" y="85" fill="white" font-size="16" font-family="Arial" text-anchor="middle">Cash</text>
+
+                    <!-- Screen -->
+                    <rect x="600" y="70" width="40" height="30" rx="5" ry="5" fill="blue" stroke="black" stroke-width="2" />
+                    <text x="620" y="110" fill="black" font-size="16" font-family="Arial" text-anchor="middle">Screen</text>
+
+                    <!-- Shelves -->
+                    @foreach (var shelf in Shelves)
+                    {
+                        <rect x="@shelf.X" y="@shelf.Y" width="@shelf.Width" height="@shelf.Height"
+                              fill="@(SelectedShelfId == shelf.Id ? "red" : "#e6a502")"
+                              @onclick="() => OnShelfClick(shelf.Id)" />
+                    }
+                </svg>
+            </div>
+        </MudDialogContent>
+    </DialogContent>
+</MudDialog>

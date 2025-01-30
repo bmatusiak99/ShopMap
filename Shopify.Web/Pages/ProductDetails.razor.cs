@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.Dtos;
-
+using Shopify.Web.Pages.ShopMaps;
 using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Pages
@@ -58,7 +58,13 @@ namespace Shopify.Web.Pages
                 { "SelectedShelfId", Product.ShelfNumber.Value }
             };
 
-            return _dialogService.ShowAsync<FurnitureShopMap>("Dialog Title", parameters, options);
+            return Product.ShopId switch
+            {
+                1 => _dialogService.ShowAsync<ElectronicsShopMap>("Electronics Shop", parameters, options),
+                2 => _dialogService.ShowAsync<BeautyShopMap>("Beauty Shop", parameters, options),
+                4 => _dialogService.ShowAsync<ShoesShopMap>("Shoes Shop", parameters, options),
+                _ => Task.CompletedTask
+            };
         }
     }
 }

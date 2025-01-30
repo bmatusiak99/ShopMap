@@ -29,7 +29,10 @@ else
                         ProductId = Product.Id,
                         ProductQuantity = 1
                         }))" Variant=" Variant.Filled" Color="Color.Primary">Add to cart</MudButton>
-                <MudButton @onclick="NavigateToMap" Variant="Variant.Filled" Color="Color.Secondary">Show on shelves</MudButton>
+                @if(Product.ShopId != 3)
+                {
+                    <MudButton @onclick="NavigateToMap" Variant="Variant.Filled" Color="Color.Secondary">Show on shelves</MudButton>
+                }
             </div>
             
         </div>

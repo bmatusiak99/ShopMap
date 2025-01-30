@@ -86,7 +86,7 @@
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel1.SizeF = new System.Drawing.SizeF(234.375F, 33.33333F);
-            this.xrLabel1.Text = "No witam xD\r\n";
+            this.xrLabel1.Text = "Hello world\r\n";
             // 
             // objectDataSource1
             // 
