@@ -6,10 +6,12 @@
     public class CustomAccessTokenProvider : IAccessTokenProvider
     {
         private readonly ILocalStorageService _localStorage;
+        private readonly AuthenticationStateService _authStateService;
 
-        public CustomAccessTokenProvider(ILocalStorageService localStorage)
+        public CustomAccessTokenProvider(ILocalStorageService localStorage, AuthenticationStateService authStateService)
         {
             _localStorage = localStorage;
+            _authStateService = authStateService;
         }
 
         public async Task<AccessTokenRequestResult> RequestAccessToken()
@@ -32,8 +34,8 @@
 
         public async Task LogoutAsync()
         {
-            // Clear the token from local storage (or wherever it's stored)
             await _localStorage.RemoveItemAsync("access_token");
+            _authStateService.NotifyAuthenticationChanged();
         }
     }
 

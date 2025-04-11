@@ -31,6 +31,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAccessTokenProvider, CustomAccessTokenProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddSingleton<AuthenticationStateService>();
 
 
 // Build and run the app

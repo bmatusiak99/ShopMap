@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject IAccessTokenProvider AccessTokenProvider
 @inject ILocalStorageService LocalStorage
+@inject AuthenticationStateService AuthStateService
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -45,62 +46,67 @@
 </div>
 
 @code {
-	private bool isUserAuthenticated = false;
-	private string userName = string.Empty;
-	private string firstName = string.Empty;
-	private string lastName = string.Empty;
+    private bool isUserAuthenticated = false;
+    private string userName = string.Empty;
+    private string firstName = string.Empty;
+    private string lastName = string.Empty;
 
-	private string tokenString = "k5b5XmV9aJ9z4bR0LqE4PnOaFvlC0wD6M8Xh2LeN8g2X5J4lQ7c3lzjq2F5HxTo";
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to authentication state changes
+        AuthStateService.OnAuthStateChanged += AuthStateChanged;
 
-	protected override async Task OnInitializedAsync()
-	{
-		// Check if there is a stored token in localStorage
-		var token = await LocalStorage.GetItemAsync<string>("access_token");
-		Console.WriteLine("Token from LocalStorage: " + token);
-		if (!string.IsNullOrEmpty(token))
-		{
-			// Try to parse the token and check if it's a valid JWT
-			try
-			{
-				var handler = new JwtSecurityTokenHandler();
-				var jwtToken = handler.ReadJwtToken(token);
+        await LoadUserFromToken();
+    }
 
-				//var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+    private async Task LoadUserFromToken()
+    {
+        var token = await LocalStorage.GetItemAsync<string>("access_token");
+        isUserAuthenticated = false;
+        userName = "";
 
-				// Extract the user's first and last name from the token
-				if (jwtToken != null)
-				{
-					firstName = jwtToken.Claims.FirstOrDefault(c => c.Type == "firstName")?.Value;
-					lastName = jwtToken.Claims.FirstOrDefault(c => c.Type == "lastName")?.Value;
+        if (!string.IsNullOrEmpty(token))
+        {
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
 
-					userName = $"{firstName} {lastName}";
-				}
+                firstName = jwtToken.Claims.FirstOrDefault(c => c.Type == "firstName")?.Value ?? "";
+                lastName = jwtToken.Claims.FirstOrDefault(c => c.Type == "lastName")?.Value ?? "";
+                userName = $"{firstName} {lastName}";
 
-				isUserAuthenticated = true;
+                isUserAuthenticated = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error decoding token: {ex.Message}");
+            }
+        }
 
+        StateHasChanged(); // Update UI
+    }
 
-			}
-			catch (Exception ex)
-			{
-				// Log the exception for debugging
-				Console.WriteLine($"Error decoding token: {ex.Message}");
-			}
-		}
+    private void AuthStateChanged()
+    {
+        _ = LoadUserFromToken(); // Reload data when auth state changes
+    }
 
-		StateHasChanged();
-	}
+    private void Login()
+    {
+        NavigationManager.NavigateTo("account/login");
+    }
 
-	private void Login()
-	{
-		// Navigate to the login page or perform other login actions
-		NavigationManager.NavigateTo("account/login");
-	}
+    private async Task Logout()
+    {
+        await AccessTokenProvider.LogoutAsync();
+        AuthStateService.NotifyAuthenticationChanged(); // Notify layout to update
+        NavigationManager.NavigateTo("/");
+    }
 
-	private async Task Logout()
-	{
-		// Call the logout logic and remove the token
-		await AccessTokenProvider.LogoutAsync(); // You can implement your custom logout logic in the provider
-		NavigationManager.NavigateTo("/"); // Redirect to the home page after logout
-		StateHasChanged();
-	}
+    public void Dispose()
+    {
+        // Unsubscribe to prevent memory leaks
+        AuthStateService.OnAuthStateChanged -= AuthStateChanged;
+    }
 }

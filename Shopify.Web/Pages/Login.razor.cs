@@ -3,6 +3,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.ViewModels;
+using Shopify.Web.Services;
 
 namespace Shopify.Web.Pages
 {
@@ -14,6 +15,7 @@ namespace Shopify.Web.Pages
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private ISnackbar Snackbar { get; set; }
         [Inject] private ILocalStorageService LocalStorage { get; set; }
+        [Inject] private AuthenticationStateService AuthStateService { get; set; }
 
         // Handle login logic
         private async Task HandleLogin()
@@ -31,6 +33,7 @@ namespace Shopify.Web.Pages
                 {
                     await LocalStorage.SetItemAsync("access_token", token); // Store just the token string
                     Snackbar.Add("Login successful!", Severity.Success);
+                    AuthStateService.NotifyAuthenticationChanged();
                     NavigationManager.NavigateTo("/");
                 }
                 else
