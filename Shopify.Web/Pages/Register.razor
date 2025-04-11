@@ -1,0 +1,39 @@
+﻿@page "/account/register"
+@using Shopify.Models.ViewModels
+
+<EditForm Model="@registerModel" OnValidSubmit="HandleRegister">
+    <MudPaper Class="pa-6 mx-auto mt-10" MaxWidth="600px" Elevation="10">
+        <MudText Typo="Typo.h5" Class="mb-4">Register</MudText>
+
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="registerModel.FirstName" Label="First Name" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="registerModel.LastName" Label="Last Name" Required="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="registerModel.Email" Label="Email" Required="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="registerModel.Password" Label="Password" InputType="InputType.Password" Required="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="registerModel.ConfirmPassword" Label="Confirm Password" InputType="InputType.Password" Required="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="registerModel.Address" Label="Address" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="registerModel.City" Label="City" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="registerModel.PostalCode" Label="Postal Code" />
+            </MudItem>
+        </MudGrid>
+
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true" Class="mt-4">
+            Register
+        </MudButton>
+    </MudPaper>
+</EditForm>
