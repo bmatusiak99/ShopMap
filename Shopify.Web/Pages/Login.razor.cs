@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.ViewModels;
@@ -12,6 +13,7 @@ namespace Shopify.Web.Pages
         [Inject] private HttpClient Http { get; set; }
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private ISnackbar Snackbar { get; set; }
+        [Inject] private ILocalStorageService LocalStorage { get; set; }
 
         // Handle login logic
         private async Task HandleLogin()
@@ -21,9 +23,20 @@ namespace Shopify.Web.Pages
 
             if (response.IsSuccessStatusCode)
             {
-                // Successful login
-                Snackbar.Add("Login successful!", Severity.Success);
-                NavigationManager.NavigateTo("/"); // Redirect to the homepage or dashboard
+                // Deserialize the response to get the actual token string
+                var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+                var token = tokenResponse?.Token;
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    await LocalStorage.SetItemAsync("access_token", token); // Store just the token string
+                    Snackbar.Add("Login successful!", Severity.Success);
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    Snackbar.Add("Login failed: Token missing from response.", Severity.Error);
+                }
             }
             else
             {
@@ -32,5 +45,12 @@ namespace Shopify.Web.Pages
                 Snackbar.Add($"Login failed: {errorMessage}", Severity.Error);
             }
         }
+
+        // DTO class to parse the JSON response
+        private class TokenResponse
+        {
+            public string Token { get; set; }
+        }
+
     }
 }

@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Shopify.Api.Entities;
 using Shopify.Models.ViewModels;
 
@@ -7,19 +11,19 @@ namespace Shopify.Api.Controllers
 {
     [ApiController]
     [Route("api/account")]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        public IActionResult Register() => View();
-        public IActionResult Login() => View();
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationViewModel model)
@@ -54,18 +58,44 @@ namespace Shopify.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return Ok("Login successful.");
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var token = GenerateJwtToken(user);
+                    return Ok(new { token });
                 }
-
                 return Unauthorized("Invalid credentials.");
             }
-
             return BadRequest("Invalid login data.");
         }
+
+
+        private string GenerateJwtToken(ApplicationUser user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName),
+                // Add other claims as necessary
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
