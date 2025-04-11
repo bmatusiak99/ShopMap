@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Shopify.Api.Entities;
 
 namespace Shopify.Api.Data
 {
-    public class ShopifyDbContext : DbContext
+    public class ShopifyDbContext : IdentityDbContext<ApplicationUser>
     {
         public ShopifyDbContext(DbContextOptions<ShopifyDbContext> options) :base(options)
         {
