@@ -2,6 +2,7 @@
 using Shopify.Api.Data;
 using Shopify.Api.Entities;
 using Shopify.Api.Repositories.Contracts;
+using Shopify.Models.Dtos;
 
 namespace Shopify.Api.Repositories
 {
@@ -37,5 +38,41 @@ namespace Shopify.Api.Repositories
 
             return products;
         }
+
+        public async Task<IEnumerable<ProductReviewDto>> GetReviews(int id)
+        {
+            return await (from review in this.shopifyDbContext.ProductReviews
+                          join user in this.shopifyDbContext.Users on review.UserId equals user.Id
+                          where review.ProductId == id
+                          select new ProductReviewDto
+                          {
+                              Id = review.Id,
+                              UserName = user.FirstName + " " + user.LastName,
+                              ReviewText = review.ReviewText,
+                              CreatedAt = review.CreatedAt,
+                              Rating = review.Rating
+                          }).ToListAsync();
+        }
+
+        public async Task<int> CreateReviewAsync(ProductReview review)
+        {
+            shopifyDbContext.ProductReviews.Add(review);
+            await shopifyDbContext.SaveChangesAsync();
+            return review.Id;
+        }
+
+        public async Task<bool> DeleteReviewAsync(int reviewId)
+        {
+            var review = await shopifyDbContext.ProductReviews.FindAsync(reviewId);
+            if (review == null)
+            {
+                return false;
+            }
+
+            shopifyDbContext.ProductReviews.Remove(review);
+            await shopifyDbContext.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

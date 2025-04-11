@@ -27,14 +27,14 @@ namespace Shopify.Web.Services
                 {
                     UserId = userId,
                     ShopId = shopId,
-                    TotalPrice = shoppingCartItems.Sum(item => item.TotalPrice), // Calculate total price
+                    TotalPrice = shoppingCartItems.Sum(item => item.TotalPrice),
                     OrderPositions = shoppingCartItems.Select(item => new OrderPositionDto
                     {
                         ProductId = item.ProductId,
                         ProductName = item.ProductName,
                         ProductPrice = item.ProductPrice,
                         Quantity = item.ProductQuantity,
-                        TotalPrice = item.ProductTotalPrice // Assuming it's calculated for the product
+                        TotalPrice = item.ProductTotalPrice
                     }).ToList()
                 };
 
@@ -44,7 +44,7 @@ namespace Shopify.Web.Services
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
-                        return default; // Or throw an exception if you prefer
+                        return default;
                     }
 
                     var createdOrder = await response.Content.ReadFromJsonAsync<int>();

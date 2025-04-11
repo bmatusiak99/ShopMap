@@ -369,5 +369,6 @@ namespace Shopify.Api.Data
         public DbSet<Shop> Shops { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderPosition> OrderPositions { get; set; }
+        public DbSet<ProductReview> ProductReviews { get; set; }
     }
 }

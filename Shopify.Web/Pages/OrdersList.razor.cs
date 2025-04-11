@@ -18,13 +18,11 @@ namespace Shopify.Web.Pages
         {
             try
             {
-                //ShoppingCartItems = await ManageCartItemsLocalStorageService.GetCollection();
                 orders = await OrderService.GetOrders();
 
             }
             catch (Exception)
             {
-                //Log exception
                 throw;
             }
         }

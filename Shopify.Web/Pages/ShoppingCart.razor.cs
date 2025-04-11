@@ -12,7 +12,6 @@ namespace Shopify.Web.Pages
 
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
 
-        //[Inject] public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
         public List<CartItemDto> ShoppingCartItems { get; set; }
         public string ErrorMessage { get; set; }
         protected string TotalPrice { get; set; }
@@ -23,7 +22,6 @@ namespace Shopify.Web.Pages
             try
             {
                 ShoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C"));
-                //ShoppingCartItems = await ManageCartItemsLocalStorageService.GetCollection();
                 CartChanged();
             }
             catch (Exception ex)
@@ -104,8 +102,6 @@ namespace Shopify.Web.Pages
                 item.TotalPrice = cartItemDto.ProductPrice * cartItemDto.ProductQuantity;
             }
 
-            //await ManageCartItemsLocalStorageService.SaveCollection(ShoppingCartItems);
-
         }
         private void CalculateCartSummaryTotals()
         {
@@ -131,8 +127,6 @@ namespace Shopify.Web.Pages
             var cartItemDto = GetCartItem(id);
 
             ShoppingCartItems.Remove(cartItemDto);
-
-            //await ManageCartItemsLocalStorageService.SaveCollection(ShoppingCartItems);
 
         }
         private void CartChanged()

@@ -16,8 +16,6 @@ namespace Shopify.Web.Pages
         [Inject]public IShoppingCartService ShoppingCartService { get; set; }
         [Inject]public IOrderService OrderService { get; set; }
 
-        //[Inject]public IManageCartItemsLocalStorageService ManageCartItemsLocalStorageService { get; set; }
-
 
         protected string DisplayButtons { get; set; } = "block";
 
@@ -25,7 +23,6 @@ namespace Shopify.Web.Pages
         {
             try
             {
-                //ShoppingCartItems = await ManageCartItemsLocalStorageService.GetCollection();
                 ShoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C"));
 
                 if (ShoppingCartItems != null && ShoppingCartItems.Count() > 0)
@@ -45,7 +42,6 @@ namespace Shopify.Web.Pages
             }
             catch (Exception)
             {
-                //Log exception
                 throw;
             }
         }
@@ -71,14 +67,7 @@ namespace Shopify.Web.Pages
         {
             try
             {
-                // Call the service to create the order
                 var createdOrder = await OrderService.CreateOrderAsync(ShoppingCartItems, Guid.Parse("79e9147f-44e3-4026-8bb6-061ef1cefe4c"), 1);
-
-                // Navigate to a confirmation or order details page
-                //NavigationManager.NavigateTo($"/OrderDetails/{createdOrder.Id}");
-
-                // Optionally, display a success message or clear the current order data
-                // SuccessMessage = "Order created successfully!";
             }
             catch (Exception ex)
             {

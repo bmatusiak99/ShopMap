@@ -63,6 +63,76 @@ namespace Shopify.Api.Controllers
                     "Error retrieving data from the database");
             }
         }
+
+        [HttpGet]
+        [Route("{id}/GetReviews")]
+        public async Task<ActionResult<IEnumerable<ProductReviewDto>>> GetReviews(int id)
+        {
+            try
+            {
+                var reviews = await this.productRepository.GetReviews(id);
+                if(reviews == null)
+                {
+                    return NotFound();
+                }
+                else 
+                {
+                    return Ok(reviews);
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
+        }
+
+        [HttpPost("CreateReview")]
+        public async Task<ActionResult<ProductReviewDto>> PostReview([FromBody] ProductReviewToAddDto productReviewToAdd)
+        {
+            try
+            {
+                var review = new ProductReview
+                {
+                    ProductId = productReviewToAdd.ProductId,
+                    UserId = productReviewToAdd.UserId,
+                    CreatedAt = productReviewToAdd.CreatedAt,
+                    Rating = productReviewToAdd.Rating,
+                    ReviewText = productReviewToAdd.ReviewText
+                    
+                };
+                int orderId = await productRepository.CreateReviewAsync(review);
+
+                return Ok(orderId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteReview/{reviewId}")]
+        public async Task<IActionResult> DeleteReview(int reviewId)
+        {
+            try
+            {
+                var result = await productRepository.DeleteReviewAsync(reviewId);
+
+                if (result)
+                {
+                    return NoContent();
+                }
+
+                return NotFound("Review not found");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route(nameof(GetProductCategories))]
         public async Task<ActionResult<IEnumerable<ProductCategoryDto>>> GetProductCategories()

@@ -12,5 +12,6 @@
         public int? ShopId { get; set; }
         public int? ShelfNumber { get; set; }
         public Shop? Shop { get; set; }
+        public ICollection<ProductReview> ProductReviews { get; set; }
     }
 }

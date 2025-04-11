@@ -21,7 +21,6 @@ namespace Shopify.Api.Controllers
         {
             try
             {
-                // Map OrderDto to Order entity
                 var order = new Order
                 {
                     UserId = orderDto.UserId,
@@ -38,10 +37,9 @@ namespace Shopify.Api.Controllers
                     }).ToList()
                 };
 
-                // Add order using repository
                 int orderId = await orderRepository.CreateOrderAsync(order);
 
-                return Ok(orderId); // Return created order ID
+                return Ok(orderId);
             }
             catch (Exception ex)
             {
