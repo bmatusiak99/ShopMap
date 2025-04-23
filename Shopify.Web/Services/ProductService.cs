@@ -191,6 +191,17 @@ namespace Shopify.Web.Services
             }
         }
 
+        public async Task DeleteProduct(int productId)
+        {
+            var response = await httpClient.DeleteAsync($"api/Product/Delete/{productId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status:{response.StatusCode} Message - {message}");
+            }
+        }
+
 
         public async Task<IEnumerable<ProductCategoryDto>> GetProductCategories()
         {

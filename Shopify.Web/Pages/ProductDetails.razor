@@ -11,6 +11,10 @@ else if (ErrorMessage != null)
 else
 {
 	<h3 class="mb-5">Product Details</h3>
+	<MudButton OnClick="ConfirmDeleteProduct" Color="Color.Error" Variant="Variant.Outlined">
+		Delete Product
+	</MudButton>
+
 	<div class="row">
 		<div class="col-md-6 mb-4">
 			@if (Product.ProductImage != null && Product.ProductImage.Length > 0)

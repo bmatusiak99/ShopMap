@@ -13,5 +13,6 @@ namespace Shopify.Api.Repositories.Contracts
         Task<Product> GetItem(int id);
         Task<ProductCategory> GetCategory(int id);
         Task<int> CreateProductAsync(Product product);
+        Task SoftDeleteProductAsync(int productId);
     }
 }

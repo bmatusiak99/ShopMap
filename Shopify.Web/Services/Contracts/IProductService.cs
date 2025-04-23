@@ -11,7 +11,7 @@ namespace Shopify.Web.Services.Contracts
         Task RemoveReview(int reviewId);
         Task<IEnumerable<ProductCategoryDto>> GetProductCategories();
         Task<IEnumerable<ProductDto>> GetItemsByCategory(int categoryId);
-
         Task<int> AddProduct(ProductToAddDto newProduct);
+        Task DeleteProduct(int productId);
     }
 }

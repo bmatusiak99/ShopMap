@@ -11,6 +11,7 @@
         public int CategoryId { get; set; }
         public int? ShopId { get; set; }
         public int? ShelfNumber { get; set; }
+        public bool IsDeleted { get; set; }
         public Shop? Shop { get; set; }
         public ICollection<ProductReview> ProductReviews { get; set; }
     }

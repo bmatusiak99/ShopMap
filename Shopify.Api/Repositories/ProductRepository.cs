@@ -80,5 +80,16 @@ namespace Shopify.Api.Repositories
             return product.Id;
         }
 
+        public async Task SoftDeleteProductAsync(int productId)
+        {
+            var product = await shopifyDbContext.Products.FindAsync(productId);
+            if (product == null)
+                throw new ArgumentException("Product not found");
+
+            product.IsDeleted = true;
+            await shopifyDbContext.SaveChangesAsync();
+        }
+
+
     }
 }

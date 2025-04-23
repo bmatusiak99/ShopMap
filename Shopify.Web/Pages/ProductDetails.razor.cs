@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.Dtos;
+using Shopify.Web.Pages.Dialogs;
 using Shopify.Web.Pages.ShopMaps;
 using Shopify.Web.Services.Contracts;
 
@@ -104,5 +105,27 @@ namespace Shopify.Web.Pages
             }
             return string.Empty;
         }
+
+        private async Task ConfirmDeleteProduct()
+        {
+            var parameters = new DialogParameters
+            {
+                { "ContentText", "Are you sure you want to delete this product?" },
+                { "ButtonText", "Delete" },
+                { "Color", Color.Error }
+            };
+
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+
+            var dialog = _dialogService.Show<DeleteDialog>("Delete Product", parameters, options);
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+            {
+                await ProductService.DeleteProduct(Product.Id);
+                NavigationManager.NavigateTo("/products");
+            }
+        }
+
     }
 }
