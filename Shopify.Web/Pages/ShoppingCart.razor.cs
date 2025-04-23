@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Shopify.Models.Dtos;
-using Shopify.Web.Services;
 using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Pages
@@ -82,7 +81,14 @@ namespace Shopify.Web.Pages
             }
 
         }
-
+        public string GetProductImageBase64(byte[] productImage)
+        {
+            if (productImage != null && productImage.Length > 0)
+            {
+                return $"data:image/png;base64,{Convert.ToBase64String(productImage)}";
+            }
+            return string.Empty;
+        }
         protected async Task UpdateQty_Input(int id)
         {
             await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, true);

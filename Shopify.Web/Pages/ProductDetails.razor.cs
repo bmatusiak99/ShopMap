@@ -95,5 +95,14 @@ namespace Shopify.Web.Pages
                 _ => Task.CompletedTask
             };
         }
+
+        public string GetProductImageBase64(byte[] productImage)
+        {
+            if (productImage != null && productImage.Length > 0)
+            {
+                return $"data:image/png;base64,{Convert.ToBase64String(productImage)}";
+            }
+            return string.Empty;
+        }
     }
 }
