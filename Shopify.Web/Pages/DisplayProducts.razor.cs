@@ -7,5 +7,14 @@ namespace Shopify.Web.Pages
     {
         [Parameter] public IEnumerable<ProductDto> ProductsList { get; set; }
 
+        public string GetProductImageBase64(byte[] productImage)
+        {
+            if (productImage != null && productImage.Length > 0)
+            {
+                return $"data:image/png;base64,{Convert.ToBase64String(productImage)}";
+            }
+            return string.Empty;
+        }
+
     }
 }

@@ -3,7 +3,14 @@
     <div class="col-md-3 mb-2">
         <a href="/ProductDetails/@item.Id">
             <div class="card">
-                <img class="img-thumbnail" src="@item.ProductImageURL" />
+                @if (item.ProductImage != null && item.ProductImage.Length > 0)
+                {
+                    <img class="img-thumbnail" src="@GetProductImageBase64(item.ProductImage)" />
+                }
+                else
+                {
+                    <img class="img-thumbnail" src="nophoto.png" />
+                }
                 <div class="card-body">
                     <h5 class="card-title mb-3"> @item.ProductName</h5>
                     <p class="card-text"><b>@item.ProductPrice.ToString("C")</b></p>

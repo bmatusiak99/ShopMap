@@ -1,0 +1,70 @@
+﻿@page "/add-product"
+@inject NavigationManager NavigationManager
+
+<MudPaper Class="pa-4 mx-auto" MaxWidth="600px">
+    <MudText Typo="Typo.h5">Add New Product</MudText>
+
+    <MudForm @ref="_form" Model="@_productModel" >
+        <MudTextField @bind-Value="_productModel.ProductName" Label="Product Name" Required="true" />
+        <MudTextField @bind-Value="_productModel.ProductDescription" Label="Description" Lines="3" />
+        <MudNumericField @bind-Value="_productModel.ProductPrice" Label="Price" />
+        <MudNumericField @bind-Value="_productModel.ProductQuantity" Label="Quantity" />
+        <MudNumericField @bind-Value="_productModel.ShelfNumber" Label="Shelf Number" />
+        <MudTextField @bind-Value="_productModel.CategoryId" Label="Category Id" />
+        <MudTextField @bind-Value="_productModel.ShopId" Label="Shop Id" />
+        
+        <MudText Typo="Typo.subtitle2">Upload Image</MudText>
+
+        <MudButton Variant="Variant.Filled" OnClick="Submit">Add Product</MudButton>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private MudForm _form;
+    private ProductFormModel _productModel = new();
+    private byte[]? _imageBytes;
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        using var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5MB
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        _imageBytes = ms.ToArray();
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (!_form.IsValid)
+            return;
+
+        // var newProduct = new Product
+        // {
+        //     ProductName = _productModel.ProductName,
+        //     ProductDescription = _productModel.ProductDescription,
+        //     ProductPrice = _productModel.ProductPrice,
+        //     ProductQuantity = _productModel.ProductQuantity,
+        //     CategoryId = _productModel.CategoryId,
+        //     ShopId = _productModel.ShopId,
+        //     ShelfNumber = _productModel.ShelfNumber,
+        //     ProductImage = _imageBytes
+        // };
+
+        // Save newProduct to the database using your service or context
+
+        NavigationManager.NavigateTo("/products"); // redirect after saving
+    }
+
+    public class ProductFormModel
+    {
+        public string ProductName { get; set; }
+        public string ProductDescription { get; set; }
+        public IBrowserFile? UploadedImage { get; set; }
+        public decimal ProductPrice { get; set; }
+        public int ProductQuantity { get; set; }
+        public int CategoryId { get; set; }
+        public int? ShopId { get; set; }
+        public int? ShelfNumber { get; set; }
+    }
+}

@@ -16,7 +16,7 @@ namespace Shopify.Api.Extensions
                     }).ToList();
         }
 
-        public static IEnumerable<ProductDto> ConvertToDto(this IEnumerable<Product> products, 
+        public static IEnumerable<ProductDto> ConvertToDto(this IEnumerable<Product> products,
             IEnumerable<ProductCategory> productCategories)
         {
             return (from product in products
@@ -28,6 +28,7 @@ namespace Shopify.Api.Extensions
                         ProductName = product.ProductName,
                         ProductDescription = product.ProductDescription,
                         ProductImageURL = product.ProductImageURL,
+                        ProductImage = product.ProductImage,
                         ProductPrice = product.ProductPrice,
                         ProductQuantity = product.ProductQuantity,
                         CategoryId = product.CategoryId,
@@ -45,6 +46,7 @@ namespace Shopify.Api.Extensions
                 ProductName = product.ProductName,
                 ProductDescription = product.ProductDescription,
                 ProductImageURL = product.ProductImageURL,
+                ProductImage = product.ProductImage,
                 ProductPrice = product.ProductPrice,
                 ProductQuantity = product.ProductQuantity,
                 CategoryId = product.CategoryId,
@@ -68,6 +70,7 @@ namespace Shopify.Api.Extensions
                         ProductName = product.ProductName,
                         ProductDescription = product.ProductDescription,
                         ProductImageURL = product.ProductImageURL,
+                        ProductImage = product.ProductImage,
                         ProductPrice = product.ProductPrice,
                         CartId = cartItem.CartId,
                         ProductQuantity = cartItem.Quantity,
@@ -84,6 +87,7 @@ namespace Shopify.Api.Extensions
                 ProductName = product.ProductName,
                 ProductDescription = product.ProductDescription,
                 ProductImageURL = product.ProductImageURL,
+                ProductImage = product.ProductImage,
                 ProductPrice = product.ProductPrice,
                 CartId = cartItem.CartId,
                 ProductQuantity = cartItem.Quantity,
