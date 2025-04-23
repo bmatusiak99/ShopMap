@@ -80,6 +80,13 @@ namespace Shopify.Api.Repositories
             return product.Id;
         }
 
+        public async Task UpdateProductAsync(Product product)
+        {
+            shopifyDbContext.Products.Update(product);
+            await shopifyDbContext.SaveChangesAsync();
+        }
+
+
         public async Task SoftDeleteProductAsync(int productId)
         {
             var product = await shopifyDbContext.Products.FindAsync(productId);

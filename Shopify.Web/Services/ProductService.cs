@@ -190,6 +190,17 @@ namespace Shopify.Web.Services
                 throw new Exception($"Http status:{response.StatusCode} Message - {message}");
             }
         }
+        public async Task UpdateProduct(ProductToAddDto editedProduct)
+        {
+            var response = await httpClient.PutAsJsonAsync("api/Product/Edit", editedProduct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status:{response.StatusCode} Message - {message}");
+            }
+        }
+
 
         public async Task DeleteProduct(int productId)
         {

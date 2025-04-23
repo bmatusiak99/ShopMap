@@ -12,6 +12,7 @@ namespace Shopify.Web.Services.Contracts
         Task<IEnumerable<ProductCategoryDto>> GetProductCategories();
         Task<IEnumerable<ProductDto>> GetItemsByCategory(int categoryId);
         Task<int> AddProduct(ProductToAddDto newProduct);
+        Task UpdateProduct(ProductToAddDto editedProduct);
         Task DeleteProduct(int productId);
     }
 }

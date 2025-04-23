@@ -179,6 +179,35 @@ namespace Shopify.Api.Controllers
             }
         }
 
+        [HttpPut("Edit")]
+        public async Task<IActionResult> EditProduct([FromBody] ProductToAddDto productToEdit)
+        {
+            try
+            {
+                var product = await productRepository.GetItem(productToEdit.Id);
+                if (product == null)
+                    return NotFound($"Product with ID {productToEdit.Id} not found.");
+
+                // Update fields
+                product.ProductName = productToEdit.ProductName;
+                product.ProductDescription = productToEdit.ProductDescription;
+                product.ProductImage = productToEdit.ProductImage;
+                product.ProductPrice = productToEdit.ProductPrice;
+                product.ProductQuantity = productToEdit.ProductQuantity;
+                product.CategoryId = productToEdit.CategoryId;
+                product.ShopId = productToEdit.ShopId;
+                product.ShelfNumber = productToEdit.ShelfNumber;
+
+                await productRepository.UpdateProductAsync(product);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

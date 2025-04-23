@@ -105,6 +105,25 @@ namespace Shopify.Web.Pages
             }
             return string.Empty;
         }
+        private async Task OpenEditProductDialog()
+        {
+            var parameters = new DialogParameters
+            {
+                { "ExistingProduct", Product }
+            };
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+            var dialog = _dialogService.Show<AddProductDialog>("Edit Product", parameters, options);
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+            {
+                Product = await ProductService.GetItem(Id); // Refresh product info
+                StateHasChanged();
+            }
+        }
+
 
         private async Task ConfirmDeleteProduct()
         {

@@ -10,6 +10,7 @@ namespace Shopify.Web.Pages.Dialogs
     public partial class AddProductDialog : ComponentBase
     {
         [CascadingParameter] protected IMudDialogInstance MudDialog { get; set; }
+        [Parameter] public ProductDto? ExistingProduct { get; set; }
         [Inject] protected IDialogService DialogService { get; set; }
         [Inject] protected IProductService ProductService { get; set; }
         [Inject] protected HttpClient Http { get; set; }
@@ -19,6 +20,30 @@ namespace Shopify.Web.Pages.Dialogs
 
         private ProductToAddDto productDto = new ProductToAddDto();
         protected string? _imagePreview;
+
+        protected override void OnInitialized()
+        {
+            if (ExistingProduct != null)
+            {
+                productDto = new ProductToAddDto
+                {
+                    Id = ExistingProduct.Id,
+                    ProductName = ExistingProduct.ProductName,
+                    ProductDescription = ExistingProduct.ProductDescription,
+                    ProductPrice = ExistingProduct.ProductPrice,
+                    ProductQuantity = ExistingProduct.ProductQuantity,
+                    CategoryId = ExistingProduct.CategoryId,
+                    ShopId = ExistingProduct.ShopId,
+                    ShelfNumber = ExistingProduct.ShelfNumber,
+                    ProductImage = ExistingProduct.ProductImage
+                };
+
+                _imagePreview = ExistingProduct.ProductImage != null
+                    ? $"data:image/png;base64,{Convert.ToBase64String(ExistingProduct.ProductImage)}"
+                    : null;
+            }
+        }
+
 
         private async Task LoadImage(InputFileChangeEventArgs e)
         {
@@ -35,9 +60,17 @@ namespace Shopify.Web.Pages.Dialogs
         {
             await _form.Validate();
 
-            await ProductService.AddProduct(productDto);
-            MudDialog.Close(DialogResult.Ok(true));
+            if (_form.IsValid)
+            {
+                if (productDto.Id > 0)
+                    await ProductService.UpdateProduct(productDto);
+                else
+                    await ProductService.AddProduct(productDto);
+
+                MudDialog.Close(DialogResult.Ok(true));
+            }
         }
+
 
 
         protected async Task OnValidated()
