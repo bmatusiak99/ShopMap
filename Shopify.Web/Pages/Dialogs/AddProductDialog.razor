@@ -1,0 +1,27 @@
+﻿<MudDialog>
+	<DialogContent>
+		<MudForm @ref="_form" Validated="OnValidated">
+			<MudTextField @bind-Value="productDto.ProductName" Label="Product Name" Required="true" />
+			<MudTextField @bind-Value="productDto.ProductDescription" Label="Product Description" />
+			<MudTextField @bind-Value="productDto.ProductPrice" Label="Price" InputType="InputType.Number" Required="true" />
+			<MudTextField @bind-Value="productDto.ProductQuantity" Label="Quantity" InputType="InputType.Number" Required="true" />
+			<MudTextField @bind-Value="productDto.CategoryId" Label="Category Id" InputType="InputType.Number" Required="true" />
+			<MudTextField @bind-Value="productDto.ShopId" Label="Shop Id" InputType="InputType.Number" />
+			<MudTextField @bind-Value="productDto.ShelfNumber" Label="Shelf Number" InputType="InputType.Number" />
+
+			<MudText Typo="Typo.subtitle2" Class="mt-4">Product Image</MudText>
+			<InputFile OnChange="LoadImage" />
+
+			@if (_imagePreview != null)
+			{
+				<MudImage Src="@_imagePreview" Alt="Preview" Width="150" Class="mt-2" />
+			}
+		</MudForm>
+
+	</DialogContent>
+
+	<DialogActions>
+		<MudButton Color="Color.Primary" OnClick="Submit">Add</MudButton>
+		<MudButton OnClick="Cancel">Cancel</MudButton>
+	</DialogActions>
+</MudDialog>

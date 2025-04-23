@@ -1,14 +1,15 @@
-﻿using Shopify.Models.Dtos;
-using Shopify.Web.Services.Contracts;
+﻿using System.Net;
 using System.Net.Http.Json;
+using Shopify.Models.Dtos;
+using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Services
 {
     public class ProductService : IProductService
     {
         private readonly HttpClient httpClient;
-        public ProductService(HttpClient httpClient) 
-        { 
+        public ProductService(HttpClient httpClient)
+        {
             this.httpClient = httpClient;
         }
 
@@ -20,9 +21,9 @@ namespace Shopify.Web.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    if(response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                         return default(ProductDto);
-                    
+
                     return await response.Content.ReadFromJsonAsync<ProductDto>();
                 }
                 else
@@ -171,6 +172,25 @@ namespace Shopify.Web.Services
                 throw;
             }
         }
+
+        public async Task<int> AddProduct(ProductToAddDto newProduct)
+        {
+            var response = await httpClient.PostAsJsonAsync("api/Product/Create", newProduct);
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                    return default;
+
+                return await response.Content.ReadFromJsonAsync<int>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status:{response.StatusCode} Message - {message}");
+            }
+        }
+
 
         public async Task<IEnumerable<ProductCategoryDto>> GetProductCategories()
         {

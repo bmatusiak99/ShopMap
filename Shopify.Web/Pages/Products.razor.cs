@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Shopify.Models.Dtos;
+using Shopify.Web.Pages.Dialogs;
 using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Pages
@@ -8,6 +10,8 @@ namespace Shopify.Web.Pages
     {
         [Inject] public IProductService ProductService { get; set; }
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
+        [Inject] public IDialogService DialogService { get; set; }
+
         public IEnumerable<ProductDto> ProductsList { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -29,5 +33,23 @@ namespace Shopify.Web.Pages
         {
             return groupedProductDto.FirstOrDefault(pg => pg.CategoryId == groupedProductDto.Key).CategoryName;
         }
+
+        private async Task OpenAddProductDialog()
+        {
+            var parameters = new DialogParameters();
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+            var dialog = DialogService.Show<AddProductDialog>("Add Product", parameters, options);
+
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+            {
+                // Product was added, refresh the list
+                ProductsList = await ProductService.GetItems();
+                StateHasChanged();
+            }
+        }
+
     }
 }

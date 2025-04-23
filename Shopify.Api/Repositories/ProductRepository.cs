@@ -73,6 +73,12 @@ namespace Shopify.Api.Repositories
             await shopifyDbContext.SaveChangesAsync();
             return true;
         }
+        public async Task<int> CreateProductAsync(Product product)
+        {
+            shopifyDbContext.Products.Add(product);
+            await shopifyDbContext.SaveChangesAsync();
+            return product.Id;
+        }
 
     }
 }

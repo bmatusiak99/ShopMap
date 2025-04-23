@@ -7,6 +7,11 @@
 else
 {
     <h3>Products</h3>
+    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenAddProductDialog">
+        Add New Product
+    </MudButton>
+
+
     var productCount = ProductsList.Count();
     @if (productCount > 0)
     {

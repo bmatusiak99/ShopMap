@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shopify.Api.Entities;
 using Shopify.Api.Extensions;
 using Shopify.Api.Repositories.Contracts;
@@ -24,7 +23,7 @@ namespace Shopify.Api.Controllers
                 var products = await this.productRepository.GetItems();
                 var productCategories = await this.productRepository.GetCategories();
 
-                if(products == null || productCategories == null) return NotFound();
+                if (products == null || productCategories == null) return NotFound();
                 else
                 {
                     var productDtos = products.ConvertToDto(productCategories);
@@ -50,9 +49,9 @@ namespace Shopify.Api.Controllers
                 else
                 {
                     var productCategory = await this.productRepository.GetCategory(product.CategoryId);
-                    
+
                     var productDto = product.ConvertToDto(productCategory);
-                    
+
                     return Ok(productDto);
                 }
             }
@@ -71,15 +70,15 @@ namespace Shopify.Api.Controllers
             try
             {
                 var reviews = await this.productRepository.GetReviews(id);
-                if(reviews == null)
+                if (reviews == null)
                 {
                     return NotFound();
                 }
-                else 
+                else
                 {
                     return Ok(reviews);
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -101,7 +100,7 @@ namespace Shopify.Api.Controllers
                     CreatedAt = productReviewToAdd.CreatedAt,
                     Rating = productReviewToAdd.Rating,
                     ReviewText = productReviewToAdd.ReviewText
-                    
+
                 };
                 int orderId = await productRepository.CreateReviewAsync(review);
 
@@ -153,5 +152,33 @@ namespace Shopify.Api.Controllers
             }
 
         }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult<int>> PostProduct([FromBody] ProductToAddDto productToAdd)
+        {
+            try
+            {
+                var product = new Product
+                {
+                    ProductName = productToAdd.ProductName,
+                    ProductDescription = productToAdd.ProductDescription,
+                    ProductImage = productToAdd.ProductImage,
+                    ProductPrice = productToAdd.ProductPrice,
+                    ProductQuantity = productToAdd.ProductQuantity,
+                    CategoryId = productToAdd.CategoryId,
+                    ShopId = productToAdd.ShopId,
+                    ShelfNumber = productToAdd.ShelfNumber
+                };
+
+                int productId = await productRepository.CreateProductAsync(product);
+                return Ok(productId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
     }
 }
