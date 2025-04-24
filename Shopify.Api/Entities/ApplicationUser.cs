@@ -10,5 +10,6 @@ namespace Shopify.Api.Entities
         public string Address { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

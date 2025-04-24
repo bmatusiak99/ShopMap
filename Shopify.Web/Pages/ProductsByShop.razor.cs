@@ -8,7 +8,8 @@ namespace Shopify.Web.Pages
     {
         [Parameter] public int CategoryId { get; set; }
         [Inject] public IProductService ProductService { get; set; }
-        public IEnumerable<ProductDto> Products { get; set; }
+        [Parameter] public IEnumerable<ProductDto> Products { get; set; }
+
         public string CategoryName { get; set; }
         public string ErrorMessage { get; set; }
 

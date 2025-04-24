@@ -38,7 +38,8 @@ namespace Shopify.Api.Controllers
                     LastName = model.LastName,
                     Address = model.Address,
                     City = model.City,
-                    PostalCode = model.PostalCode
+                    PostalCode = model.PostalCode,
+                    IsAdmin = false
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -79,7 +80,7 @@ namespace Shopify.Api.Controllers
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
                 new Claim("firstName", user.FirstName),
                 new Claim("lastName", user.LastName),
-                // Add other claims as necessary
+                new Claim("isAdmin", user.IsAdmin.ToString().ToLower())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
