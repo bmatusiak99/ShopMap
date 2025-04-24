@@ -23,10 +23,13 @@
 
 	<main>
 		<div class="top-row px-4">
+            @if (isAdmin)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Color="Color.Primary" />
+            }
             @if (isUserAuthenticated)
             {
                 <span>Logged as: @userName</span>
-                <span>@isAdmin</span>
 			    <CartMenu />
             }
             else

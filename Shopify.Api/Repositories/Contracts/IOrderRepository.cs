@@ -7,6 +7,7 @@ namespace Shopify.Api.Repositories.Contracts
     {
         Task<int> CreateOrderAsync(Order order);
         Task<IEnumerable<OrderViewDto>> GetOrders();
+        Task MarkOrderAsRealisedAsync(int orderId);
     }
 
 }

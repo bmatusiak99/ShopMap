@@ -27,6 +27,7 @@ namespace Shopify.Api.Controllers
                     ShopId = orderDto.ShopId,
                     OrderDate = DateTime.Now,
                     TotalPrice = orderDto.TotalPrice,
+                    IsRealised = false,
                     OrderPositions = orderDto.OrderPositions.Select(op => new OrderPosition
                     {
                         ProductId = op.ProductId,
@@ -70,6 +71,21 @@ namespace Shopify.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
         }
+
+        [HttpPut("MarkAsRealised/{id}")]
+        public async Task<IActionResult> MarkAsRealised(int id)
+        {
+            try
+            {
+                await orderRepository.MarkOrderAsRealisedAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
 
 
 

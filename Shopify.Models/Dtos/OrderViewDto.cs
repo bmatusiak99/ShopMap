@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shopify.Models.Dtos
+﻿namespace Shopify.Models.Dtos
 {
     public class OrderViewDto
     {
@@ -12,6 +6,7 @@ namespace Shopify.Models.Dtos
         public string UserName { get; set; }
         public DateTime OrderDate { get; set; }
         public string ShopName { get; set; }
+        public bool IsRealised { get; set; }
         public decimal TotalPrice { get; set; }
     }
 }

@@ -32,9 +32,21 @@ namespace Shopify.Api.Repositories
                               UserName = user.FirstName + " " + user.LastName,
                               OrderDate = order.OrderDate,
                               ShopName = shop.Name,
+                              IsRealised = order.IsRealised,
                               TotalPrice = order.TotalPrice
                           }).ToListAsync();
         }
+
+        public async Task MarkOrderAsRealisedAsync(int orderId)
+        {
+            var order = await shopifyDbContext.Orders.FindAsync(orderId);
+            if (order == null)
+                throw new ArgumentException("Order not found");
+
+            order.IsRealised = true;
+            await shopifyDbContext.SaveChangesAsync();
+        }
+
 
     }
 

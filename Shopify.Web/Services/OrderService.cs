@@ -1,11 +1,6 @@
-﻿using Shopify.Models.Dtos;
+﻿using System.Net.Http.Json;
+using Shopify.Models.Dtos;
 using Shopify.Web.Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 
 namespace Shopify.Web.Services
@@ -88,6 +83,18 @@ namespace Shopify.Web.Services
                 throw;
             }
         }
+
+        public async Task MarkOrderAsRealised(int orderId)
+        {
+            var response = await httpClient.PutAsync($"api/Order/MarkAsRealised/{orderId}", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status:{response.StatusCode} Message - {message}");
+            }
+        }
+
 
 
     }
