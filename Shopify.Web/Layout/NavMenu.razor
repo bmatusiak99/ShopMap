@@ -20,18 +20,20 @@
         </div>
 
         <ProductCategoriesNavMenu />
+        @if(isAdmin)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="OrdersList">
+                    <span class="fa-regular fa-file-lines" aria-hidden="true"></span> Orders List
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="OrdersList">
-                <span class="fa-regular fa-file-lines" aria-hidden="true"></span> Orders List
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="viewer/1">
-                <span class="fa-solid fa-file-invoice" aria-hidden="true"></span> Report Viewer
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="viewer/1">
+                    <span class="fa-solid fa-file-invoice" aria-hidden="true"></span> Report Viewer
+                </NavLink>
+            </div>
+        }
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="ShoppingCart">

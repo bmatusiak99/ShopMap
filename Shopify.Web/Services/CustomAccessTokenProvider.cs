@@ -1,8 +1,7 @@
-﻿namespace Shopify.Web.Services
-{
-    using System.Threading.Tasks;
-    using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 
+namespace Shopify.Web.Services
+{
     public class CustomAccessTokenProvider : IAccessTokenProvider
     {
         private readonly ILocalStorageService _localStorage;
@@ -35,8 +34,7 @@
         public async Task LogoutAsync()
         {
             await _localStorage.RemoveItemAsync("access_token");
-            _authStateService.NotifyAuthenticationChanged();
+            await _authStateService.UpdateAuthStateAsync(_localStorage);
         }
     }
-
 }

@@ -1,0 +1,60 @@
+﻿version: '3.4'
+
+services:
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+  ocelot-gateway:
+    build:
+      context: ./src/Gateway/OcelotApiGateway
+    ports:
+      - "8000:80"
+    networks:
+      - app-network
+    depends_on:
+      - products-service
+      - orders-service
+
+  products-service:
+    build:
+      context: ./src/Services/ProductsService
+    networks:
+      - app-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - sqlserver
+
+  orders-service:
+    build:
+      context: ./src/Services/OrdersService
+    networks:
+      - app-network
+    depends_on:
+      - sqlserver
+
+  accounts-service:
+    build:
+      context: ./src/Services/AccountsService
+    networks:
+      - app-network
+    depends_on:
+      - sqlserver
+
+  shoppingcarts-service:
+    build:
+      context: ./src/Services/ShoppingCartService
+    networks:
+      - app-network
+    depends_on:
+      - sqlserver
+
+networks:
+  app-network:

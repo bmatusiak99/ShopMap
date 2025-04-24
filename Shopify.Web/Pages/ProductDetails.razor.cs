@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.Dtos;
 using Shopify.Web.Pages.Dialogs;
@@ -14,6 +16,8 @@ namespace Shopify.Web.Pages
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] public IDialogService _dialogService { get; set; }
+        [Inject] ILocalStorageService LocalStorage { get; set; }
+        private bool isAdmin;
         protected IEnumerable<ProductReviewDto> productReviews { get; set; }
         private ProductReviewToAddDto newReview = new ProductReviewToAddDto();
         protected int AverageRating { get; set; }
@@ -25,6 +29,16 @@ namespace Shopify.Web.Pages
         {
             try
             {
+
+                var token = await LocalStorage.GetItemAsync<string>("access_token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwtToken = handler.ReadJwtToken(token);
+                    var isAdminClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
+                    isAdmin = bool.TryParse(isAdminClaim, out var result) && result;
+                }
+
                 Product = await ProductService.GetItem(Id);
                 productReviews = await ProductService.GetReviews(Id);
 

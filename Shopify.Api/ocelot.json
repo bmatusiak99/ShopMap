@@ -1,0 +1,115 @@
+﻿{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/Product",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/{id}/GetReviews",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/{id}/reviews",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/CreateReview",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/review",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/DeleteReview/{reviewId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/review/{reviewId}",
+            "UpstreamHttpMethod": [ "DELETE" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/GetProductCategories",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/categories",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/Create",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/Edit",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product",
+            "UpstreamHttpMethod": [ "PUT" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Product/Delete/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productservice",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/product/{id}",
+            "UpstreamHttpMethod": [ "DELETE" ]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:8000"
+    }
+}
