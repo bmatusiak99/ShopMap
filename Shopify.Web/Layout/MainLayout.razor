@@ -23,11 +23,14 @@
 
 	<main>
 		<div class="top-row px-4">
+            @if (isUserAuthenticated)
+            {
+                <span>Logged as: @userName</span>
+            }
 			<CartMenu />
 			@if (isUserAuthenticated)
 			{
 				<div class="user-info">
-					<span>Logged as: @userName</span>
 					<MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Logout">Logout</MudButton>
 				</div>
 			}

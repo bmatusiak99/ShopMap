@@ -20,7 +20,7 @@ namespace Shopify.Web.Pages.Dialogs
 
         private ProductToAddDto productDto = new ProductToAddDto();
         protected string? _imagePreview;
-
+        private string SubmitText = "Add";
         protected override void OnInitialized()
         {
             if (ExistingProduct != null)
@@ -42,6 +42,10 @@ namespace Shopify.Web.Pages.Dialogs
                     ? $"data:image/png;base64,{Convert.ToBase64String(ExistingProduct.ProductImage)}"
                     : null;
             }
+            if (productDto.Id != 0 || productDto.Id != null)
+                SubmitText = "Edit";
+
+            StateHasChanged();
         }
 
 
