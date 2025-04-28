@@ -14,7 +14,9 @@ namespace Shopify.Web.Pages
         protected decimal PaymentAmount { get; set; }
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
         [Inject] public IOrderService OrderService { get; set; }
+        [Inject] public IAccountService AccountService { get; set; }
         private DotNetObjectReference<Checkout>? _dotNetRef;
+        private Guid userId;
 
         protected string DisplayButtons { get; set; } = "block";
 
@@ -22,36 +24,30 @@ namespace Shopify.Web.Pages
         {
             if (firstRender)
             {
-                // Create a DotNetObjectReference for this component
                 _dotNetRef = DotNetObjectReference.Create(this);
-                // Pass the DotNetObjectReference to the JavaScript function
                 await Js.InvokeVoidAsync("initPayPalButton", _dotNetRef);
             }
         }
 
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-                ShoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C"));
+            var userInfo = await AccountService.GetUserInfoAsync();
+            userId = Guid.Parse(userInfo.Id);
+            ShoppingCartItems = await ShoppingCartService.GetItems(userId);
 
-                if (ShoppingCartItems != null && ShoppingCartItems.Count() > 0)
-                {
-                    Guid orderGuid = Guid.NewGuid();
-
-                    PaymentAmount = ShoppingCartItems.Sum(p => p.TotalPrice);
-                    TotalQty = ShoppingCartItems.Sum(p => p.ProductQuantity);
-                    PaymentDescription = $"O_{Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C")}_{orderGuid}";
-                }
-                else
-                {
-                    DisplayButtons = "none";
-                }
-            }
-            catch (Exception)
+            if (ShoppingCartItems != null && ShoppingCartItems.Count() > 0)
             {
-                throw;
+                Guid orderGuid = Guid.NewGuid();
+
+                PaymentAmount = ShoppingCartItems.Sum(p => p.TotalPrice);
+                TotalQty = ShoppingCartItems.Sum(p => p.ProductQuantity);
+                PaymentDescription = $"O_{Guid.Parse(userInfo.Id)}_{orderGuid}";
             }
+            else
+            {
+                DisplayButtons = "none";
+            }
+
         }
 
         [JSInvokable("CreateOrderAfterPayment")]
@@ -60,7 +56,7 @@ namespace Shopify.Web.Pages
             Console.WriteLine("JSInvokable method called successfully!");
             try
             {
-                var createdOrder = await OrderService.CreateOrderAsync(ShoppingCartItems, Guid.Parse("79e9147f-44e3-4026-8bb6-061ef1cefe4c"), 1);
+                var createdOrder = await OrderService.CreateOrderAsync(ShoppingCartItems, userId, 1);
             }
             catch (Exception ex)
             {
@@ -68,9 +64,7 @@ namespace Shopify.Web.Pages
             }
         }
 
-        public void Dispose()
-        {
-            _dotNetRef?.Dispose();
-        }
+        public void Dispose() => _dotNetRef?.Dispose();
+
     }
 }

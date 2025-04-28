@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shopify.Models\Shopify.Models.csproj" />
+    <ProjectReference Include="..\Shopify.Web\Shopify.Web.csproj" />
   </ItemGroup>
 
 </Project>

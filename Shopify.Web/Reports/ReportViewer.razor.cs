@@ -1,7 +1,8 @@
 ﻿using DevExpress.Blazor.Reporting;
 using DevExpress.XtraReports.UI;
 using Microsoft.AspNetCore.Components;
-using Shopify.Web.ReportViewModels;
+using Shopify.Models.ViewModels;
+using Shopify.Web.Services.Contracts;
 
 namespace Shopify.Web.Reports
 {
@@ -9,8 +10,10 @@ namespace Shopify.Web.Reports
     {
         [Parameter] public int orderId { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IOrderService OrderService { get; set; }
         public DxReportViewer reportViewer { get; set; }
         public XtraReport Report { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             var orderReportViewModel = await LoadOrderData(orderId);
@@ -19,16 +22,14 @@ namespace Shopify.Web.Reports
 
         private async Task<OrderReportViewModel> LoadOrderData(int orderId)
         {
-            await Task.Delay(500);
-
-            return new OrderReportViewModel
+            var order = await OrderService.GetOrderByIdAsync(orderId);
+            if (order == null)
             {
-                Id = orderId,
-                UserName = "John Doe",
-                OrderDate = DateTime.UtcNow,
-                ShopName = "Best Electronics",
-                TotalPrice = 149.99m
-            };
+                NavigationManager.NavigateTo("/OrdersList");
+                return new OrderReportViewModel();
+            }
+
+            return order;
         }
 
 

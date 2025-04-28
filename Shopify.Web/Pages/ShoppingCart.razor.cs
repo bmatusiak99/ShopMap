@@ -10,6 +10,7 @@ namespace Shopify.Web.Pages
         [Inject] public IJSRuntime Js { get; set; }
 
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
+        [Inject] public IAccountService AccountService { get; set; }
 
         public List<CartItemDto> ShoppingCartItems { get; set; }
         public string ErrorMessage { get; set; }
@@ -20,84 +21,63 @@ namespace Shopify.Web.Pages
         {
             try
             {
-                ShoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C"));
+                var userInfo = await AccountService.GetUserInfoAsync();
+                ShoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse(userInfo.Id));
                 CartChanged();
             }
             catch (Exception ex)
             {
-
                 ErrorMessage = ex.Message;
             }
         }
+
         protected async Task DeleteCartItem_Click(int id)
         {
             var cartItemDto = await ShoppingCartService.DeleteItem(id);
-
             await RemoveCartItem(id);
             CartChanged();
-
+        }
+        private async Task RemoveCartItem(int id)
+        {
+            var cartItemDto = GetCartItem(id);
+            ShoppingCartItems.Remove(cartItemDto);
         }
 
         protected async Task UpdateQtyCartItem_Click(int id, int qty)
         {
-            try
+            if (qty > 0)
             {
-                if (qty > 0)
+                var updateItemDto = new CartItemQuantityUpdateDto
                 {
-                    var updateItemDto = new CartItemQuantityUpdateDto
-                    {
-                        CartItemId = id,
-                        ProductQuantity = qty
-                    };
+                    CartItemId = id,
+                    ProductQuantity = qty
+                };
 
-                    var returnedUpdateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
+                var returnedUpdateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
+                await UpdateItemTotalPrice(returnedUpdateItemDto);
 
-                    await UpdateItemTotalPrice(returnedUpdateItemDto);
+                CalculateCartSummaryTotals();
+                CartChanged();
 
-                    CalculateCartSummaryTotals();
-                    CartChanged();
+                await MakeUpdateQtyButtonVisible(id, false);
+            }
+            else
+            {
+                var item = this.ShoppingCartItems.FirstOrDefault(i => i.Id == id);
 
-                    await MakeUpdateQtyButtonVisible(id, false);
-
-
-                }
-                else
+                if (item != null)
                 {
-                    var item = this.ShoppingCartItems.FirstOrDefault(i => i.Id == id);
-
-                    if (item != null)
-                    {
-                        item.ProductQuantity = 1;
-                        item.TotalPrice = item.ProductPrice;
-                    }
-
+                    item.ProductQuantity = 1;
+                    item.TotalPrice = item.ProductPrice;
                 }
-
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
-        public string GetProductImageBase64(byte[] productImage)
-        {
-            if (productImage != null && productImage.Length > 0)
-            {
-                return $"data:image/png;base64,{Convert.ToBase64String(productImage)}";
-            }
-            return string.Empty;
-        }
-        protected async Task UpdateQty_Input(int id)
-        {
-            await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, true);
         }
 
-        private async Task MakeUpdateQtyButtonVisible(int id, bool visible)
-        {
-            await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
-        }
+        protected async Task UpdateQty_Input(int id) => await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, true);
+        private async Task MakeUpdateQtyButtonVisible(int id, bool visible) => await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
+        private void SetTotalPrice() => TotalPrice = this.ShoppingCartItems.Sum(p => p.TotalPrice).ToString("C");
+        private void SetTotalQuantity() => TotalQuantity = this.ShoppingCartItems.Sum(p => p.ProductQuantity);
+        private CartItemDto GetCartItem(int id) { return ShoppingCartItems.FirstOrDefault(i => i.Id == id); }
 
         private async Task UpdateItemTotalPrice(CartItemDto cartItemDto)
         {
@@ -114,31 +94,21 @@ namespace Shopify.Web.Pages
             SetTotalPrice();
             SetTotalQuantity();
         }
-
-        private void SetTotalPrice()
-        {
-            TotalPrice = this.ShoppingCartItems.Sum(p => p.TotalPrice).ToString("C");
-        }
-        private void SetTotalQuantity()
-        {
-            TotalQuantity = this.ShoppingCartItems.Sum(p => p.ProductQuantity);
-        }
-
-        private CartItemDto GetCartItem(int id)
-        {
-            return ShoppingCartItems.FirstOrDefault(i => i.Id == id);
-        }
-        private async Task RemoveCartItem(int id)
-        {
-            var cartItemDto = GetCartItem(id);
-
-            ShoppingCartItems.Remove(cartItemDto);
-
-        }
         private void CartChanged()
         {
             CalculateCartSummaryTotals();
             ShoppingCartService.RaiseEventOnShoppingCartChanged(TotalQuantity);
+        }
+
+
+
+        public string GetProductImageBase64(byte[] productImage)
+        {
+            if (productImage != null && productImage.Length > 0)
+            {
+                return $"data:image/png;base64,{Convert.ToBase64String(productImage)}";
+            }
+            return string.Empty;
         }
     }
 }

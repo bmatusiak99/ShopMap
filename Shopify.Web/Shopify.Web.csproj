@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ReportViewModels\" />
     <Folder Include="wwwroot\Images\Logos\" />
   </ItemGroup>
 

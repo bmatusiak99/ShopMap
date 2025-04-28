@@ -1,9 +1,4 @@
-﻿using DevExpress.XtraReports.UI;
-using Shopify.Web.ReportViewModels;
-using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
+﻿using Shopify.Models.ViewModels;
 
 namespace Shopify.Web.Reports
 {

@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shopify.Models.Dtos;
@@ -16,6 +15,7 @@ namespace Shopify.Web.Pages
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] public IDialogService _dialogService { get; set; }
+        [Inject] public IAccountService AccountService { get; set; }
         [Inject] ILocalStorageService LocalStorage { get; set; }
         private bool isAdmin;
         protected IEnumerable<ProductReviewDto> productReviews { get; set; }
@@ -29,15 +29,8 @@ namespace Shopify.Web.Pages
         {
             try
             {
-
-                var token = await LocalStorage.GetItemAsync<string>("access_token");
-                if (!string.IsNullOrEmpty(token))
-                {
-                    var handler = new JwtSecurityTokenHandler();
-                    var jwtToken = handler.ReadJwtToken(token);
-                    var isAdminClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
-                    isAdmin = bool.TryParse(isAdminClaim, out var result) && result;
-                }
+                var userInfo = await AccountService.GetUserInfoAsync();
+                isAdmin = userInfo.IsAdmin;
 
                 Product = await ProductService.GetItem(Id);
                 productReviews = await ProductService.GetReviews(Id);
@@ -50,6 +43,9 @@ namespace Shopify.Web.Pages
                 ErrorMessage = ex.Message;
             }
         }
+        private void CalculateAverageRating() => AverageRating = productReviews.Any() ? (int)Math.Round(productReviews.Average(x => x.Rating)) : 0;
+
+
         private async void SubmitReview()
         {
             if (!string.IsNullOrWhiteSpace(newReview.ReviewText) && newReview.Rating > 0)
@@ -78,7 +74,7 @@ namespace Shopify.Web.Pages
             StateHasChanged();
         }
 
-        private void CalculateAverageRating() => AverageRating = productReviews.Any() ? (int)Math.Round(productReviews.Average(x => x.Rating)) : 0;
+
 
         protected async Task AddToCart_Click(CartItemToAddDto cartItemToAddDto)
         {
@@ -119,6 +115,8 @@ namespace Shopify.Web.Pages
             }
             return string.Empty;
         }
+
+
         private async Task OpenEditProductDialog()
         {
             var parameters = new DialogParameters
@@ -133,7 +131,7 @@ namespace Shopify.Web.Pages
 
             if (!result.Canceled)
             {
-                Product = await ProductService.GetItem(Id); // Refresh product info
+                Product = await ProductService.GetItem(Id);
                 StateHasChanged();
             }
         }

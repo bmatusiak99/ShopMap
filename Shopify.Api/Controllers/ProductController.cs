@@ -63,6 +63,75 @@ namespace Shopify.Api.Controllers
             }
         }
 
+        [HttpPost("Create")]
+        public async Task<ActionResult<int>> PostProduct([FromBody] ProductToAddDto productToAdd)
+        {
+            try
+            {
+                var product = new Product
+                {
+                    ProductName = productToAdd.ProductName,
+                    ProductDescription = productToAdd.ProductDescription,
+                    ProductImage = productToAdd.ProductImage,
+                    ProductPrice = productToAdd.ProductPrice,
+                    ProductQuantity = productToAdd.ProductQuantity,
+                    CategoryId = productToAdd.CategoryId,
+                    ShopId = productToAdd.ShopId,
+                    ShelfNumber = productToAdd.ShelfNumber
+                };
+
+                int productId = await productRepository.CreateProductAsync(product);
+                return Ok(productId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut("Edit")]
+        public async Task<IActionResult> EditProduct([FromBody] ProductToAddDto productToEdit)
+        {
+            try
+            {
+                var product = await productRepository.GetItem(productToEdit.Id);
+                if (product == null)
+                    return NotFound($"Product with ID {productToEdit.Id} not found.");
+
+                product.ProductName = productToEdit.ProductName;
+                product.ProductDescription = productToEdit.ProductDescription;
+                product.ProductImage = productToEdit.ProductImage;
+                product.ProductPrice = productToEdit.ProductPrice;
+                product.ProductQuantity = productToEdit.ProductQuantity;
+                product.CategoryId = productToEdit.CategoryId;
+                product.ShopId = productToEdit.ShopId;
+                product.ShelfNumber = productToEdit.ShelfNumber;
+
+                await productRepository.UpdateProductAsync(product);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                await productRepository.SoftDeleteProductAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpGet]
         [Route("{id}/GetReviews")]
         public async Task<ActionResult<IEnumerable<ProductReviewDto>>> GetReviews(int id)
@@ -153,74 +222,7 @@ namespace Shopify.Api.Controllers
 
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<int>> PostProduct([FromBody] ProductToAddDto productToAdd)
-        {
-            try
-            {
-                var product = new Product
-                {
-                    ProductName = productToAdd.ProductName,
-                    ProductDescription = productToAdd.ProductDescription,
-                    ProductImage = productToAdd.ProductImage,
-                    ProductPrice = productToAdd.ProductPrice,
-                    ProductQuantity = productToAdd.ProductQuantity,
-                    CategoryId = productToAdd.CategoryId,
-                    ShopId = productToAdd.ShopId,
-                    ShelfNumber = productToAdd.ShelfNumber
-                };
 
-                int productId = await productRepository.CreateProductAsync(product);
-                return Ok(productId);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpPut("Edit")]
-        public async Task<IActionResult> EditProduct([FromBody] ProductToAddDto productToEdit)
-        {
-            try
-            {
-                var product = await productRepository.GetItem(productToEdit.Id);
-                if (product == null)
-                    return NotFound($"Product with ID {productToEdit.Id} not found.");
-
-                // Update fields
-                product.ProductName = productToEdit.ProductName;
-                product.ProductDescription = productToEdit.ProductDescription;
-                product.ProductImage = productToEdit.ProductImage;
-                product.ProductPrice = productToEdit.ProductPrice;
-                product.ProductQuantity = productToEdit.ProductQuantity;
-                product.CategoryId = productToEdit.CategoryId;
-                product.ShopId = productToEdit.ShopId;
-                product.ShelfNumber = productToEdit.ShelfNumber;
-
-                await productRepository.UpdateProductAsync(product);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
-        {
-            try
-            {
-                await productRepository.SoftDeleteProductAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
 
 
 

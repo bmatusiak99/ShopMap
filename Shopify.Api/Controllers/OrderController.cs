@@ -2,6 +2,7 @@
 using Shopify.Api.Entities;
 using Shopify.Api.Repositories.Contracts;
 using Shopify.Models.Dtos;
+using Shopify.Models.ViewModels;
 
 namespace Shopify.Api.Controllers
 {
@@ -86,6 +87,24 @@ namespace Shopify.Api.Controllers
             }
         }
 
+
+        [HttpGet("report/{orderId}")]
+        public async Task<ActionResult<OrderReportViewModel>> GetOrderReport(int orderId)
+        {
+            try
+            {
+                var order = await orderRepository.GetOrderByIdAsync(orderId);
+                return Ok(order);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
 
 

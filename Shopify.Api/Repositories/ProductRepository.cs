@@ -14,16 +14,12 @@ namespace Shopify.Api.Repositories
         {
             this.shopifyDbContext = shopifyDbContext;
         }
-        public async Task<IEnumerable<ProductCategory>> GetCategories()
-        {
-            var categories = await this.shopifyDbContext.ProductCategories.ToListAsync();
-            return categories;
-        }
 
-        public async Task<ProductCategory> GetCategory(int id)
+        public async Task<IEnumerable<Product>> GetItems()
         {
-            var category = await shopifyDbContext.ProductCategories.SingleOrDefaultAsync(c => c.Id == id);
-            return category;
+            var products = await this.shopifyDbContext.Products.Where(x => !x.IsDeleted).ToListAsync();
+
+            return products;
         }
 
         public async Task<Product> GetItem(int id)
@@ -32,12 +28,6 @@ namespace Shopify.Api.Repositories
             return product;
         }
 
-        public async Task<IEnumerable<Product>> GetItems()
-        {
-            var products = await this.shopifyDbContext.Products.ToListAsync();
-
-            return products;
-        }
 
         public async Task<IEnumerable<ProductReviewDto>> GetReviews(int id)
         {
@@ -73,6 +63,7 @@ namespace Shopify.Api.Repositories
             await shopifyDbContext.SaveChangesAsync();
             return true;
         }
+
         public async Task<int> CreateProductAsync(Product product)
         {
             shopifyDbContext.Products.Add(product);
@@ -96,6 +87,30 @@ namespace Shopify.Api.Repositories
             product.IsDeleted = true;
             await shopifyDbContext.SaveChangesAsync();
         }
+
+
+        public async Task<IEnumerable<ProductCategory>> GetCategories()
+        {
+            var categories = await this.shopifyDbContext.ProductCategories.ToListAsync();
+            return categories;
+        }
+
+        public async Task<ProductCategory> GetCategory(int id)
+        {
+            var category = await shopifyDbContext.ProductCategories.SingleOrDefaultAsync(c => c.Id == id);
+            return category;
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
     }

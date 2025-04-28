@@ -9,6 +9,7 @@ namespace Shopify.Web.Layout
         [Inject] private NavigationManager Navigation { get; set; }
         [Inject] ILocalStorageService LocalStorage { get; set; }
         private bool isAdmin;
+        private bool isAuthenticated;
 
         private bool collapseNavMenu = true;
 
@@ -30,6 +31,7 @@ namespace Shopify.Web.Layout
                 var jwtToken = handler.ReadJwtToken(token);
                 var isAdminClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
                 isAdmin = bool.TryParse(isAdminClaim, out var result) && result;
+
             }
 
 

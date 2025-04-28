@@ -107,7 +107,153 @@
             ],
             "UpstreamPathTemplate": "/product/{id}",
             "UpstreamHttpMethod": [ "DELETE" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Order",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "orderservice",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/order",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Order/Create",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "orderservice",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/order/create",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Order/MarkAsRealised/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "orderservice",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/order/realised/{id}",
+            "UpstreamHttpMethod": [ "PUT" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/Order/Report/{orderId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "orderservice",
+                    "Port": 5002
+                }
+            ],
+            "UpstreamPathTemplate": "/order/report/{orderId}",
+            "UpstreamHttpMethod": [ "GET" ]
         }
+    ],
+    {
+        "DownstreamPathTemplate": "/api/ShoppingCart/{userId}/GetItems",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "shoppingcartservice",
+                "Port": 5003
+            }
+        ],
+        "UpstreamPathTemplate": "/shoppingcart/{userId}/items",
+        "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/ShoppingCart/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "shoppingcartservice",
+                "Port": 5003
+            }
+        ],
+        "UpstreamPathTemplate": "/shoppingcart/{id}",
+        "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/ShoppingCart",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "shoppingcartservice",
+                "Port": 5003
+            }
+        ],
+        "UpstreamPathTemplate": "/shoppingcart",
+        "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/ShoppingCart/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "shoppingcartservice",
+                "Port": 5003
+            }
+        ],
+        "UpstreamPathTemplate": "/shoppingcart/{id}",
+        "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/ShoppingCart/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "shoppingcartservice",
+                "Port": 5003
+            }
+        ],
+        "UpstreamPathTemplate": "/shoppingcart/{id}",
+        "UpstreamHttpMethod": [ "PATCH" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/account/register",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "accountservice",
+                "Port": 5004
+            }
+        ],
+        "UpstreamPathTemplate": "/account/register",
+        "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/account/login",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "accountservice",
+                "Port": 5004
+            }
+        ],
+        "UpstreamPathTemplate": "/account/login",
+        "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+        "DownstreamPathTemplate": "/api/account",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "accountservice",
+                "Port": 5004
+            }
+        ],
+        "UpstreamPathTemplate": "/account/logout",
+        "UpstreamHttpMethod": [ "POST" ]
+    },
+    ],
     ],
     "GlobalConfiguration": {
         "BaseUrl": "http://localhost:8000"

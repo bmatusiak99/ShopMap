@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Shopify.Models.Dtos;
+using Shopify.Models.ViewModels;
 using Shopify.Web.Services.Contracts;
 
 
@@ -38,9 +39,7 @@ namespace Shopify.Web.Services
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
                         return default;
-                    }
 
                     var createdOrder = await response.Content.ReadFromJsonAsync<int>();
                     return createdOrder;
@@ -56,31 +55,43 @@ namespace Shopify.Web.Services
                 throw new Exception("An error occurred while creating the order", ex);
             }
         }
+
+
+        public async Task<OrderReportViewModel> GetOrderByIdAsync(int orderId)
+        {
+            var response = await httpClient.GetAsync($"api/Order/report/{orderId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<OrderReportViewModel>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
+            }
+        }
+
+
         public async Task<IEnumerable<OrderViewDto>> GetOrders()
         {
-            try
+            var response = await httpClient.GetAsync($"api/Order");
+
+            if (response.IsSuccessStatusCode)
             {
-                var response = await httpClient.GetAsync($"api/Order");
-
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
-                        return Enumerable.Empty<OrderViewDto>();
-                    }
-                    return await response.Content.ReadFromJsonAsync<IEnumerable<OrderViewDto>>();
+                    return Enumerable.Empty<OrderViewDto>();
                 }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
-                }
-
+                return await response.Content.ReadFromJsonAsync<IEnumerable<OrderViewDto>>();
             }
-            catch (Exception)
+            else
             {
-
-                throw;
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
             }
         }
 

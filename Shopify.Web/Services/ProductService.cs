@@ -15,134 +15,94 @@ namespace Shopify.Web.Services
 
         public async Task<ProductDto> GetItem(int id)
         {
-            try
+
+            var response = await httpClient.GetAsync($"api/Product/{id}");
+
+            if (response.IsSuccessStatusCode)
             {
-                var response = await httpClient.GetAsync($"api/Product/{id}");
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    return default(ProductDto);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                        return default(ProductDto);
-
-                    return await response.Content.ReadFromJsonAsync<ProductDto>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception(message);
-
-                }
+                return await response.Content.ReadFromJsonAsync<ProductDto>();
             }
-            catch (Exception)
+            else
             {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
 
-                throw;
             }
         }
 
         public async Task<int> AddReview(ProductReviewToAddDto newReview)
         {
-            try
+
+            var response = await httpClient.PostAsJsonAsync<ProductReviewToAddDto>("api/Product/CreateReview", newReview);
+
+            if (response.IsSuccessStatusCode)
             {
-                var response = await httpClient.PostAsJsonAsync<ProductReviewToAddDto>("api/Product/CreateReview", newReview);
-
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
-                        return default;
-                    }
-
-                    var createdReview = await response.Content.ReadFromJsonAsync<int>();
-                    return createdReview;
-
+                    return default;
                 }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status:{response.StatusCode} Message -{message}");
-                }
+
+                var createdReview = await response.Content.ReadFromJsonAsync<int>();
+                return createdReview;
 
             }
-            catch (Exception)
+            else
             {
-
-                throw;
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status:{response.StatusCode} Message -{message}");
             }
         }
 
         public async Task RemoveReview(int reviewId)
         {
-            try
-            {
-                var response = await httpClient.DeleteAsync($"api/Product/DeleteReview/{reviewId}");
+            var response = await httpClient.DeleteAsync($"api/Product/DeleteReview/{reviewId}");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status: {response.StatusCode} Message - {message}");
-                }
-            }
-            catch (Exception)
+            if (!response.IsSuccessStatusCode)
             {
-                throw;
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status: {response.StatusCode} Message - {message}");
             }
         }
 
         public async Task<IEnumerable<ProductDto>> GetItems()
         {
-            try
+            var response = await this.httpClient.GetAsync("api/Product");
+
+            if (response.IsSuccessStatusCode)
             {
-                var response = await this.httpClient.GetAsync("api/Product");
-
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
-                        return Enumerable.Empty<ProductDto>();
-                    }
-
-                    return await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status code: {response.StatusCode} message: {message}");
+                    return Enumerable.Empty<ProductDto>();
                 }
 
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
             }
-            catch (Exception)
+            else
             {
-                //Log exception
-                throw;
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status code: {response.StatusCode} message: {message}");
             }
         }
 
         public async Task<IEnumerable<ProductReviewDto>> GetReviews(int id)
         {
-            try
+            var response = await httpClient.GetAsync($"api/Product/{id}/GetReviews");
+
+            if (response.IsSuccessStatusCode)
             {
-                var response = await httpClient.GetAsync($"api/Product/{id}/GetReviews");
-
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    {
-                        return Enumerable.Empty<ProductReviewDto>();
-                    }
-                    return await response.Content.ReadFromJsonAsync<IEnumerable<ProductReviewDto>>();
+                    return Enumerable.Empty<ProductReviewDto>();
                 }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
-                }
-
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ProductReviewDto>>();
             }
-            catch (Exception)
+            else
             {
-
-                throw;
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status code: {response.StatusCode} Message: {message}");
             }
         }
 

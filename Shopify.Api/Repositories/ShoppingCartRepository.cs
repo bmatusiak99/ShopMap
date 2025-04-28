@@ -17,10 +17,9 @@ namespace Shopify.Api.Repositories
 
         private async Task<bool> CartItemExists(int cartId, int productId)
         {
-            return await this.shopifyDbContext.CartItems.AnyAsync(c => c.CartId == cartId &&
-                                                                     c.ProductId == productId);
-
+            return await this.shopifyDbContext.CartItems.AnyAsync(c => c.CartId == cartId && c.ProductId == productId);
         }
+
         public async Task<CartItem> AddItem(CartItemToAddDto cartItemToAddDto)
         {
             if (await CartItemExists(cartItemToAddDto.CartId, cartItemToAddDto.ProductId) == false)
@@ -41,9 +40,7 @@ namespace Shopify.Api.Repositories
                     return result.Entity;
                 }
             }
-
             return null;
-
         }
 
         public async Task<CartItem> DeleteItem(int id)
@@ -55,9 +52,7 @@ namespace Shopify.Api.Repositories
                 this.shopifyDbContext.CartItems.Remove(item);
                 await this.shopifyDbContext.SaveChangesAsync();
             }
-
             return item;
-
         }
 
         public async Task<CartItem> GetItem(int id)
