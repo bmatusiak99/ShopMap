@@ -18,6 +18,7 @@ namespace Shopify.Web.Pages
         [Inject] public IAccountService AccountService { get; set; }
         [Inject] ILocalStorageService LocalStorage { get; set; }
         private bool isAdmin;
+        private Guid userId;
         protected IEnumerable<ProductReviewDto> productReviews { get; set; }
         private ProductReviewToAddDto newReview = new ProductReviewToAddDto();
         protected int AverageRating { get; set; }
@@ -31,6 +32,7 @@ namespace Shopify.Web.Pages
             {
                 var userInfo = await AccountService.GetUserInfoAsync();
                 isAdmin = userInfo.IsAdmin;
+                userId = Guid.Parse(userInfo.Id);
 
                 Product = await ProductService.GetItem(Id);
                 productReviews = await ProductService.GetReviews(Id);
@@ -53,7 +55,7 @@ namespace Shopify.Web.Pages
                 var review = new ProductReviewToAddDto
                 {
                     ProductId = Product.Id,
-                    UserId = Guid.Parse("79e9147f-44e3-4026-8bb6-061ef1cefe4c"),
+                    UserId = userId,
                     ReviewText = newReview.ReviewText,
                     Rating = newReview.Rating,
                     CreatedAt = DateTime.Now

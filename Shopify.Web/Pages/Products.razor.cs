@@ -13,8 +13,10 @@ namespace Shopify.Web.Pages
         [Inject] public IProductService ProductService { get; set; }
         [Inject] public IShoppingCartService ShoppingCartService { get; set; }
         [Inject] public IDialogService DialogService { get; set; }
+        [Inject] public IAccountService AccountService { get; set; }
         [Inject] ILocalStorageService LocalStorage { get; set; }
         private bool isAdmin;
+        private Guid userId;
         public IEnumerable<ProductDto> ProductsList { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -27,10 +29,13 @@ namespace Shopify.Web.Pages
                 var jwtToken = handler.ReadJwtToken(token);
                 var isAdminClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
                 isAdmin = bool.TryParse(isAdminClaim, out var result) && result;
+
+                var userInfo = await AccountService.GetUserInfoAsync();
+                userId = Guid.Parse(userInfo.Id);
             }
 
             ProductsList = await ProductService.GetItems();
-            var shoppingCartItems = await ShoppingCartService.GetItems(Guid.Parse("79E9147F-44E3-4026-8BB6-061EF1CEFE4C"));
+            var shoppingCartItems = await ShoppingCartService.GetItems(userId);
             var totalQty = shoppingCartItems.Sum(i => i.ProductQuantity);
 
             ShoppingCartService.RaiseEventOnShoppingCartChanged(totalQty);

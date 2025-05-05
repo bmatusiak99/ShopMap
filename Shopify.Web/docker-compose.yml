@@ -1,60 +1,87 @@
-﻿version: '3.4'
+﻿version: '3.8'
 
 services:
-  sqlserver:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
+  productservice:
+    build:
+      context: .
+      dockerfile: Shopify.ProductService/Dockerfile
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+
+  orderservice:
+    build:
+      context: .
+      dockerfile: Shopify.OrderService/Dockerfile
+    ports:
+      - "5002:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+
+  shoppingcartservice:
+    build:
+      context: .
+      dockerfile: Shopify.ShoppingCartService/Dockerfile
+    ports:
+      - "5003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+
+  accountservice:
+    build:
+      context: .
+      dockerfile: Shopify.AccountService/Dockerfile
+    ports:
+      - "5004:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: Shopify.ApiGateway/Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - ./Shopify.ApiGateway/ocelot.json:/app/ocelot.json
+    depends_on:
+      - productservice
+      - orderservice
+      - shoppingcartservice
+      - accountservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  web:
+    build:
+      context: .
+      dockerfile: Shopify.Web/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - apigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: shopify-db
     environment:
       SA_PASSWORD: "!Bartosz2025"
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
-    networks:
-      - app-network
+    volumes:
+      - shopifydb_data:/var/opt/mssql
 
-  ocelot-gateway:
-    build:
-      context: ./src/Gateway/OcelotApiGateway
-    ports:
-      - "8000:80"
-    networks:
-      - app-network
-    depends_on:
-      - products-service
-      - orders-service
-
-  products-service:
-    build:
-      context: ./src/Services/ProductsService
-    networks:
-      - app-network
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    depends_on:
-      - sqlserver
-
-  orders-service:
-    build:
-      context: ./src/Services/OrdersService
-    networks:
-      - app-network
-    depends_on:
-      - sqlserver
-
-  accounts-service:
-    build:
-      context: ./src/Services/AccountsService
-    networks:
-      - app-network
-    depends_on:
-      - sqlserver
-
-  shoppingcarts-service:
-    build:
-      context: ./src/Services/ShoppingCartService
-    networks:
-      - app-network
-    depends_on:
-      - sqlserver
-
-networks:
-  app-network:
+volumes:
+  shopifydb_data:
